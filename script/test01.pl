@@ -5,7 +5,7 @@ use strict;
 use warnings;
 
 use version;
-our $VERSION = '0.001';
+our $VERSION = '0.001000';
 use English qw( -no_match_vars ); # Avoids reg-ex performance penalty
 local $OUTPUT_AUTOFLUSH = 1;
 
