@@ -17,90 +17,136 @@ use Software::LicenseUtils 0.103005;
 use File::Slurp;
 use File::Find::Rule       ();
 use File::Find::Rule::Perl ();
-use constant FFR => 'File::Find::Rule';
 use Try::Tiny;
 
+use constant {FFR => 'File::Find::Rule', TRUE => 1, FALSE => 0,};
+
 use Test::Builder 0.98;
+
 @Test::Software::License::EXPORT = qw(
-  run_ok
+	all_software_license_ok
+	all_software_license_from_perlmodule_ok
+	all_software_license_from_meta_ok
+	all_software_license_from_metayml_ok
+	all_software_license_from_metajson_ok
 );
 
+my $passed_a_test = FALSE;
+
+
 sub import {
-  my ($self) = shift;
-  my $pack = caller;
+	my ($self) = shift;
+	my $pack = caller;
 
-  my $Test = Test::Builder->new;
+	my $Test = Test::Builder->new;
 
-  $Test->exported_to($pack);
-  $Test->plan(@_);
+	$Test->exported_to($pack);
+	$Test->plan(@_);
 
-  $self->export_to_level(1, $self, @Test::Software::License::EXPORT);
+	$self->export_to_level(1, $self, @Test::Software::License::EXPORT);
 }
 
-sub run_ok {
+sub all_software_license_ok {
 	my $self = shift;
-	
-my $Test = Test::Builder->new;
+	my $Test = Test::Builder->new;
+	all_software_license_from_perlmodule_ok();
+	all_software_license_from_metayml_ok();
+	all_software_license_from_metajson_ok();
+	$Test->ok($passed_a_test, 'This distribution apers to have a valid License');
+}
 
-	my $arg ||= {};
-	$arg->{paths} ||= [qw( script bin lib t )];
+sub all_software_license_from_meta_ok {
+	my $self = shift;
+	my $Test = Test::Builder->new;
+	all_software_license_from_metayml_ok();
+	all_software_license_from_metajson_ok();
+	$Test->ok($passed_a_test, 'This distribution appiers to have a valid License');
+}
 
-#  my $Test = Test::Builder->new;
+sub all_software_license_from_perlmodule_ok {
+	my $self = shift;
+	my $Test = Test::Builder->new;
 
-#  $version = _objectify_version($version);
+	my @files              = FFR->perl_module->in('lib');
+	my $found_perl_modules = $#files + 1;
+	$Test->ok($files[0],
+		'found (' . $found_perl_modules . ') perl modules to test');
 
-	# my @perl_files;
-	# for my $path (@{$arg->{paths}}) {
-	# if (-f $path and -s $path) {
-	# push @perl_files, $path;
-	# }
-	# elsif (-d $path) {
-	# push @perl_files, File::Find::Rule->perl_file->in($path);
-	# }
-	# }
+	try {
+		foreach my $file (@files) {
+			my $pm_text = read_file($file);
+			my @guesses = Software::LicenseUtils->guess_license_from_pod($pm_text);
+			if (@guesses) {
 
-# p @perl_files;
-
-	# my @files = File::Find::Rule->perl_file->in('lib');
-	# my @files = FFR->perl_module;
-
-	my @files = FFR->perl_module->in('lib');
-
-	# p @files;
-
-	foreach my $file (@files) {
-		my $pm_text = read_file($file);
-		my @guesses = Software::LicenseUtils->guess_license_from_pod($pm_text);
-		if (@guesses) {
-			say $file . " -> @guesses";
-			$Test->ok(1, $file);
-			
+				# say $file . " -> @guesses";
+				$Test->ok(1, "$file -> @guesses");
+				$passed_a_test = TRUE;
+			}
 		}
 	}
-	try {
-		my $meta_yml = read_file('META.yml');
-		my @guess_yml
-			= Software::LicenseUtils->guess_license_from_meta($meta_yml);
-		say "META.yml -> @guess_yml";
-		$Test->ok(1, 'META.yml');
-	} catch {
-		$Test->skip('no META.yml found');
-		};
+	catch {
+		$Test->skip('no perl_modules found');
+	};
+}
 
+
+sub all_software_license_from_metayml_ok {
+	my $self = shift;
+	my $Test = Test::Builder->new;
+
+	if (-e 'META.yml') {
+		try {
+			my $meta_yml = read_file('META.yml');
+			my @guess_yml
+				= Software::LicenseUtils->guess_license_from_meta($meta_yml);
+
+			# p @guess_yml;
+			# say "META.yml -> @guess_yml";
+			if (@guess_yml) {
+				$Test->ok(1, "META.yml -> @guess_yml");
+				$passed_a_test = TRUE;
+			}
+			else {
+				# $Test->skip('META.yml license unknown');
+				$Test->ok(0, 'META.yml -> license unknown');
+				$passed_a_test = FALSE;
+			}
+		};
+	}
+	else {
+		$Test->skip('no META.yml found');
+	}
+}
+
+sub all_software_license_from_metajson_ok {
+	my $self = shift;
+	my $Test = Test::Builder->new;
+
+# try{
+	if (-e 'META.json') {
 	try {
 		my $meta_json = read_file('META.json');
 		my @guess_json
 			= Software::LicenseUtils->guess_license_from_meta($meta_json);
-		say "META.json -> @guess_json";
-		$Test->ok(1, 'META.json');
-	} catch {
-		# my $Test = Test::Builder->new;
-		# Test->plan(skip_all => 'no META.json found');
+
+		# say "META.json -> @guess_json";
+		if (@guess_json) {
+			$Test->ok(1, "META.json -> @guess_json");
+			$passed_a_test = TRUE;
+		}
+		else {
+			# $Test->skip('META.json license unknown');
+			$Test->ok(0, 'META.json -> license unknown');
+			$passed_a_test = FALSE;
+			
+		}
+	};
+	}
+	else {
 		$Test->skip('no META.json found');
-		};
-
+	}
+# };
 }
-
 
 1;    # Magic true value required at end of module
 __END__

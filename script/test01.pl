@@ -17,17 +17,22 @@ use FindBin qw($Bin);
 use lib map {"$Bin/$_"} qw( lib ../lib );
 
 
-say 'Start';
-
 use Test::More;
 use Test::Requires {
 	'Test::Software::License' => 0.001,
 };
 
 
-run_ok();
+all_software_license_ok();
+
+
+# all_software_license_from_perlmodule_ok;
+
+# all_software_license_from_meta_ok();
+
+# all_software_license_from_metayml_ok;
+# all_software_license_from_metajson_ok;
 
 done_testing();
-say 'END';
 
 exit(0);
