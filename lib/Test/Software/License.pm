@@ -226,6 +226,29 @@ This document describes Test::Software::License version 0.001000
 
 this should be treated as beta, as initial release
 
+
+=head1 METHODS
+
+=over 4
+
+=item * all_software_license_from_meta_ok
+
+=item * all_software_license_from_metajson_ok
+
+=item * all_software_license_from_metayml_ok
+
+=item * all_software_license_from_perlmodule_ok
+
+=item * all_software_license_from_perlscript_ok
+
+=item * all_software_license_ok
+
+=item * guess_license
+
+=item * import
+
+=back
+
 =head1 INTERFACE 
 
 =for author to fill in:

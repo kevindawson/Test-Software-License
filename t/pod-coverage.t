@@ -13,7 +13,7 @@ BEGIN {
 
 use Test::Requires { 'Test::Pod::Coverage' => 1.08 };
 
-pod_coverage_ok( );
+pod_coverage_ok('Test::Software::License');
 
 done_testing();
 
