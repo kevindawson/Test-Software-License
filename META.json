@@ -1,7 +1,7 @@
 {
    "abstract" : "[One line description of module's purpose here]",
    "author" : [
-      "kevin dawson <bowtie@cpan.org>"
+      "Kevin Dawson <bowtie@cpan.org>"
    ],
    "dynamic_config" : 0,
    "generated_by" : "Dist::Milla version v1.0.4, Dist::Zilla version 4.300039, CPAN::Meta::Converter version 2.132830",
