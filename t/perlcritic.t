@@ -1,9 +1,23 @@
-#!perl
+use strict;
+use warnings FATAL => 'all';
 
-if (!require Test::Perl::Critic) {
-    Test::More::plan(
-        skip_all => "Test::Perl::Critic required for testing PBP compliance"
-    );
+use English qw( -no_match_vars );
+local $OUTPUT_AUTOFLUSH = 1;
+
+BEGIN {
+	unless ($ENV{RELEASE_TESTING}) {
+		require Test::More;
+		Test::More::plan(
+			skip_all => 'Author tests, not required for installation.');
+	}
 }
 
-Test::Perl::Critic::all_critic_ok();
+use Test::Requires {'Perl::Critic' => 1.118, 'Test::Perl::Critic' => 1.02,};
+
+Test::Perl::Critic->import(
+	-severity => 4,
+	-verbose  => 4,
+	-exclude  => [ 'RequireRcsKeywords', 'constant' ],
+);
+
+all_critic_ok();

@@ -12,13 +12,20 @@ This document describes Test::Software::License version 0.001000
 
 # SYNOPSIS
 
-    use Test::Software::License;
+	use Test::More;
+	use Test::Requires {
+		'Test::Software::License' => 0.001000,
+	};
+
+	all_software_license_ok();
+
+	done_testing();
 
     
 
 # DESCRIPTION
 
-
+this should be treated as beta, as initial release
 
 # INTERFACE 
 
@@ -58,21 +65,23 @@ None reported.
 
 # BUGS AND LIMITATIONS
 
-No bugs have been reported.
-
-Please report any bugs or feature requests to
-`bug-test-software-license@rt.cpan.org`, or through the web interface at
-[http://rt.cpan.org](http://rt.cpan.org).
-
-
+to get the best out of this you need to apply some of the patches in
+Software::License pull requests
 
 # AUTHOR
 
-kevin dawson <bowtie@cpan.org>
+Kevin Dawson <bowtie@cpan.org>
+
+## CONTRIBUTORS
+
+none at present
 
 # COPYRIGHT
 
-Copyright 2013- Kevin Dawson
+Copyright &copy; 2013 the Test::Software::License  ["AUTHOR"](#AUTHOR) and ["CONTRIBUTORS"](#CONTRIBUTORS)
+as listed above.
+
+
 
 # LICENSE
 

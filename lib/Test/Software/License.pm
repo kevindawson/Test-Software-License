@@ -35,7 +35,7 @@ my $passed_a_test = FALSE;
 
 
 sub import {
-	my ($self) = shift;
+	my $self = shift;
 	my $pack = caller;
 
 	my $Test = Test::Builder->new;
@@ -44,6 +44,7 @@ sub import {
 	$Test->plan(@_);
 
 	$self->export_to_level(1, $self, @Test::Software::License::EXPORT);
+	return;
 }
 
 
@@ -55,6 +56,7 @@ sub all_software_license_ok {
 	all_software_license_from_metajson_ok();
 	$Test->ok($passed_a_test,
 		'This distribution appears to have a valid License');
+	return;
 }
 
 
@@ -64,6 +66,7 @@ sub all_software_license_from_meta_ok {
 	all_software_license_from_metajson_ok();
 	$Test->ok($passed_a_test,
 		'This distribution appears to have a valid License');
+	return;
 }
 
 
@@ -85,6 +88,7 @@ sub all_software_license_from_perlmodule_ok {
 		guess_license(\@files);
 
 	}
+	return;
 }
 
 
@@ -108,6 +112,7 @@ sub all_software_license_from_perlscript_ok {
 
 		}
 	}
+	return;
 }
 
 
@@ -132,7 +137,7 @@ sub guess_license {
 			}
 		}
 	};
-
+	return;
 }
 
 
@@ -157,6 +162,7 @@ sub all_software_license_from_metayml_ok {
 	else {
 		$Test->skip('no META.yml found');
 	}
+	return;
 }
 
 
@@ -183,6 +189,7 @@ sub all_software_license_from_metajson_ok {
 	else {
 		$Test->skip('no META.json found');
 	}
+	return;
 }
 
 1;    # Magic true value required at end of module
@@ -205,20 +212,19 @@ This document describes Test::Software::License version 0.001000
 
 =head1 SYNOPSIS
 
-    use Test::Software::License;
+	use Test::More;
+	use Test::Requires {
+		'Test::Software::License' => 0.001000,
+	};
 
-=for author to fill in:
-    Brief code example(s) here showing commonest usage(s).
-    This section will be as far as many users bother reading
-    so make it as educational and exeplary as possible.
-  
+	all_software_license_ok();
+
+	done_testing();
+
   
 =head1 DESCRIPTION
 
-=for author to fill in:
-    Write a full description of the module and its features here.
-    Use subsections (=head2, =head3) as appropriate.
-
+this should be treated as beta, as initial release
 
 =head1 INTERFACE 
 
@@ -289,29 +295,22 @@ None reported.
 
 =head1 BUGS AND LIMITATIONS
 
-=for author to fill in:
-    A list of known problems with the module, together with some
-    indication Whether they are likely to be fixed in an upcoming
-    release. Also a list of restrictions on the features the module
-    does provide: data types that cannot be handled, performance issues
-    and the circumstances in which they may arise, practical
-    limitations on the size of data sets, special cases that are not
-    (yet) handled, etc.
-
-No bugs have been reported.
-
-Please report any bugs or feature requests to
-C<bug-test-software-license@rt.cpan.org>, or through the web interface at
-L<http://rt.cpan.org>.
-
+to get the best out of this you need to apply some of the patches in
+Software::License pull requests
 
 =head1 AUTHOR
 
-kevin dawson E<lt>bowtie@cpan.orgE<gt>
+Kevin Dawson E<lt>bowtie@cpan.orgE<gt>
+
+=head2 CONTRIBUTORS
+
+none at present
 
 =head1 COPYRIGHT
 
-Copyright 2013- Kevin Dawson
+Copyright E<copy> 2013 the Test::Software::License  L</AUTHOR> and L</CONTRIBUTORS>
+as listed above.
+
 
 =head1 LICENSE
 

@@ -1,6 +1,21 @@
-#!perl -T
+use strict;
+use warnings FATAL => 'all';
 
-use Test::More;
-eval "use Test::Pod 1.14";
-plan skip_all => "Test::Pod 1.14 required for testing POD" if $@;
+use English qw( -no_match_vars );
+local $OUTPUT_AUTOFLUSH = 1;
+
+BEGIN {
+	unless ($ENV{RELEASE_TESTING}) {
+		use Test::More;
+		Test::More::plan(
+			skip_all => 'Author tests, not required for installation.');
+	}
+}
+
+use Test::Requires { 'Test::Pod' => 1.48 };
+
 all_pod_files_ok();
+
+done_testing();
+
+__END__
