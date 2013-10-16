@@ -6,7 +6,7 @@ use warnings;
 use Software::License 0.103005;
 use Data::Printer {caller_info => 1, colored => 1,};
 use version;
-our $VERSION = '0.001002';
+our $VERSION = '0.001003';
 
 # ABSTRACT: little useful bits of code for licensey things
 
