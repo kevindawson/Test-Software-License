@@ -5,4 +5,5 @@
 MYMETA.*
 !META.json
 /.prove
+/test*
 
