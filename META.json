@@ -1,5 +1,5 @@
 {
-   "abstract" : "[One line description of module's purpose here]",
+   "abstract" : "just another xt for Software::License",
    "author" : [
       "Kevin Dawson <bowtie@cpan.org>"
    ],
@@ -76,7 +76,7 @@
          "web" : "https://github.com/kevindawson/Test-Software-License"
       }
    },
-   "version" : "0.001001",
+   "version" : "0.001003",
    "x_contributors" : [
       "bowtie <bowtie@cpan.org>"
    ]

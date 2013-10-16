@@ -1,12 +1,12 @@
 # NAME
 
-Test::Software::License - \[One line description of module's purpose here\]
+Test::Software::License - just another xt for Software::License
 
 
 
 # VERSION
 
-This document describes Test::Software::License version 0.001000
+This document describes Test::Software::License version 0.001002
 
 
 
@@ -14,14 +14,14 @@ This document describes Test::Software::License version 0.001000
 
 	use Test::More;
 	use Test::Requires {
-		'Test::Software::License' => 0.001000,
+		'Test::Software::License' => 0.00,
 	};
 
 	all_software_license_ok();
 
 	done_testing();
 
-    
+see eg/ for a compleat test files
 
 # DESCRIPTION
 
@@ -32,54 +32,24 @@ this should be treated as beta, as initial release
 # METHODS
 
 - all\_software\_license\_from\_meta\_ok
+
+    If you just want to test the META files only
+
 - all\_software\_license\_from\_metajson\_ok
 - all\_software\_license\_from\_metayml\_ok
 - all\_software\_license\_from\_perlmodule\_ok
+
+    If you just want to test the contents of lib directories
+
 - all\_software\_license\_from\_perlscript\_ok
+
+    If you just want to test  the contents script and bin directories
+
 - all\_software\_license\_ok
-- guess\_license
+
+    This is the main method you should use.
+
 - import
-
-# INTERFACE 
-
-
-
-# DIAGNOSTICS
-
-- `Error message here, perhaps with %s placeholders`
-
-    \[Description of error here\]
-
-- `Another error message here`
-
-    \[Description of error here\]
-
-    \[Et cetera, et cetera\]
-
-
-
-# CONFIGURATION AND ENVIRONMENT
-
-Test::Software::License requires no configuration files or environment variables.
-
-
-
-# DEPENDENCIES
-
-None.
-
-
-
-# INCOMPATIBILITIES
-
-None reported.
-
-
-
-# BUGS AND LIMITATIONS
-
-to get the best out of this you need to apply some of the patches in
-Software::License pull requests
 
 # AUTHOR
 
@@ -102,3 +72,5 @@ This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.
 
 # SEE ALSO
+
+[Software::License](http://search.cpan.org/perldoc?Software::License)
