@@ -13,7 +13,8 @@ local $OUTPUT_AUTOFLUSH = 1;
 use parent 0.225 qw(Exporter);
 
 use Data::Printer {caller_info => 1, colored => 1,};
-use Software::LicenseUtils 0.103005;
+# use Software::LicenseUtils 0.103005;
+use Test::Software::LicenseUtils;
 use File::Slurp;
 use File::Find::Rule       ();
 use File::Find::Rule::Perl ();
@@ -126,7 +127,7 @@ sub guess_license {
 	try {
 		foreach my $file (@{$files_ref}) {
 			my $ps_text = read_file($file);
-			my @guesses = Software::LicenseUtils->guess_license_from_pod($ps_text);
+			my @guesses = Test::Software::LicenseUtils->guess_license_from_pod($ps_text);
 
 			if ($#guesses >= 0) {
 				$Test->ok(1, "$file -> @guesses");
@@ -148,7 +149,7 @@ sub all_software_license_from_metayml_ok {
 		try {
 			my $meta_yml = read_file('META.yml');
 			my @guess_yml
-				= Software::LicenseUtils->guess_license_from_meta($meta_yml);
+				= Test::Software::LicenseUtils->guess_license_from_meta($meta_yml);
 			if (@guess_yml) {
 				$Test->ok(1, "META.yml -> @guess_yml");
 				$passed_a_test = TRUE;
@@ -173,7 +174,7 @@ sub all_software_license_from_metajson_ok {
 		try {
 			my $meta_json = read_file('META.json');
 			my @guess_json
-				= Software::LicenseUtils->guess_license_from_meta($meta_json);
+				= Test::Software::LicenseUtils->guess_license_from_meta($meta_json);
 
 			if (@guess_json) {
 				$Test->ok(1, "META.json -> @guess_json");
