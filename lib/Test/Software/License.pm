@@ -6,7 +6,7 @@ use strict;
 use Carp;
 
 use version;
-our $VERSION = '0.001003';
+our $VERSION = '0.001002';
 use English qw( -no_match_vars );    # Avoids reg-ex performance penalty
 local $OUTPUT_AUTOFLUSH = 1;
 
@@ -208,14 +208,14 @@ Test::Software::License - just another xt for Software::License
 
 =head1 VERSION
 
-This document describes Test::Software::License version 0.001003
+This document describes Test::Software::License version 0.001002
 
 
 =head1 SYNOPSIS
 
 	use Test::More;
 	use Test::Requires {
-		'Test::Software::License' => 0.001003,
+		'Test::Software::License' => 0.00,
 	};
 
 	all_software_license_ok();
