@@ -222,7 +222,8 @@ This document describes Test::Software::License version 0.001002
 
 	done_testing();
 
-  
+see eg/ for a compleat test files
+
 =head1 DESCRIPTION
 
 this should be treated as beta, as initial release
