@@ -2,6 +2,10 @@ Revision history for Test-Software-License
 
 {{$NEXT}}
 
+0.001002 2013-10-16 22:02:02 BST
+ - Add a hacked local LicenseUtils
+ - get rid of the script and provide it in eg
+
 0.001001  2013-10-14 23:34:09 BST
  - let's share what we have done so far
 
