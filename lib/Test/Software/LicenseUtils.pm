@@ -14,18 +14,6 @@ use File::Spec;
 use IO::Dir;
 use Module::Load;
 
-=method guess_license_from_pod
-
-  my @guesses = Software::LicenseUtils->guess_license_from_pod($pm_text);
-
-Given text containing POD, like a .pm file, this method will attempt to guess
-at the license under which the code is available.  This method will either
-a list of Software::License classes (or instances) or false.
-
-Calling this method in scalar context is a fatal error.
-
-=cut
-
 my $_v = qr/(?:v(?:er(?:sion|\.))(?: |\.)?)/i;
 my @phrases = (
   "under the same (?:terms|license) as perl $_v?6" => [],
@@ -111,15 +99,6 @@ sub guess_license_from_pod {
 	return;
 }
 
-=method guess_license_from_meta
-
-  my @guesses = Software::LicenseUtils->guess_license_from_meta($meta_str);
-
-Given the content of the META.(yml|json) file found in a CPAN distribution, this
-method makes a guess as to which licenses may apply to the distribution.  It
-will return a list of zero or more Software::License instances or classes.
-
-=cut
 
 sub guess_license_from_meta {
   my ($class, $meta_text) = @_;
@@ -169,7 +148,22 @@ This is a hack of Software::LicenseUtils which includes #issue16 and #issue17
 
 =item * guess_license_from_pod
 
+  my @guesses = Software::LicenseUtils->guess_license_from_pod($pm_text);
+
+Given text containing POD, like a .pm file, this method will attempt to guess
+at the license under which the code is available.  This method will either
+a list of Software::License classes (or instances) or false.
+
+Calling this method in scalar context is a fatal error.
+
 =item * guess_license_from_meta
+
+  my @guesses = Software::LicenseUtils->guess_license_from_meta($meta_str);
+
+Given the content of the META.(yml|json) file found in a CPAN distribution, this
+method makes a guess as to which licenses may apply to the distribution.  It
+will return a list of zero or more Software::License instances or classes.
+
 
 =back
 
