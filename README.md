@@ -2,6 +2,10 @@
 
 Test::Software::License - just another xt for Software::License
 
+# VERSION
+
+This document describes Test::Software::License version 0.001005
+
 # SYNOPSIS
 
 	use Test::More;

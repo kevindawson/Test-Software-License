@@ -6,7 +6,7 @@ use strict;
 use Carp;
 
 use version;
-our $VERSION = '0.001004';
+our $VERSION = '0.001005';
 use English qw( -no_match_vars );    # Avoids reg-ex performance penalty
 local $OUTPUT_AUTOFLUSH = 1;
 
@@ -38,7 +38,6 @@ my $passed_a_test = FALSE;
 sub import {
 	my $self = shift;
 	my $pack = caller;
-
 	my $Test = Test::Builder->new;
 
 	$Test->exported_to($pack);
@@ -204,6 +203,10 @@ __END__
 =head1 NAME
 
 Test::Software::License - just another xt for Software::License
+
+=head1 VERSION
+
+This document describes Test::Software::License version 0.001005
 
 =head1 SYNOPSIS
 

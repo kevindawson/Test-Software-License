@@ -6,7 +6,7 @@ use warnings;
 use Software::License 0.103005;
 # use Data::Printer {caller_info => 1, colored => 1,};
 use version;
-our $VERSION = '0.001004';
+our $VERSION = '0.001005';
 
 # ABSTRACT: little useful bits of code for licensey things
 
@@ -130,11 +130,14 @@ __END__
 =head1 NAME
 
 Test::Software::LicenseUtils - add a hacked local LicenseUtils
-  
+
+=head1 VERSION
+
+This document describes Test::Software::LicenseUtils version 0.001005
+
 =head1 DESCRIPTION
 
 This is a hack of Software::LicenseUtils which includes #issue16 and #issue17
-
 
 =head1 METHODS
 

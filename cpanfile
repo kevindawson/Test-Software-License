@@ -7,7 +7,7 @@ requires 'File::Find::Rule',       '0.33';
 requires 'File::Find::Rule::Perl', '1.13';
 requires 'File::Slurp',            '9999.19';
 requires 'File::Spec',             '3.4';
-requires 'IO::Dir',                '1.25';
+requires 'IO::Dir',                '1.10';
 requires 'Module::Load',           '0.24';
 requires 'Software::License',      '0.103005';
 requires 'Test::Builder',          '0.99';
