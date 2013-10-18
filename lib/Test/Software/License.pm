@@ -1,6 +1,6 @@
 package Test::Software::License;
 
-use v5.10;
+use 5.008009;
 use warnings;
 use strict;
 use Carp;
@@ -12,7 +12,7 @@ local $OUTPUT_AUTOFLUSH = 1;
 
 use parent 0.225 qw(Exporter);
 
-use Data::Printer {caller_info => 1, colored => 1,};
+# use Data::Printer {caller_info => 1, colored => 1,};
 # use Software::LicenseUtils 0.103005;
 use Test::Software::LicenseUtils;
 use File::Slurp;
@@ -205,17 +205,11 @@ __END__
 
 Test::Software::License - just another xt for Software::License
 
-
-=head1 VERSION
-
-This document describes Test::Software::License version 0.001002
-
-
 =head1 SYNOPSIS
 
 	use Test::More;
 	use Test::Requires {
-		'Test::Software::License' => 0.00,
+		'Test::Software::License' => 0.001,
 	};
 
 	all_software_license_ok();
@@ -279,6 +273,7 @@ it under the same terms as Perl itself.
 =head1 SEE ALSO
 
 L<Software::License>
+L<XT::Manager>
 
 =cut
 

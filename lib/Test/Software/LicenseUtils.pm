@@ -4,7 +4,7 @@ use strict;
 use warnings;
 
 use Software::License 0.103005;
-use Data::Printer {caller_info => 1, colored => 1,};
+# use Data::Printer {caller_info => 1, colored => 1,};
 use version;
 our $VERSION = '0.001003';
 
@@ -130,12 +130,6 @@ __END__
 =head1 NAME
 
 Test::Software::LicenseUtils - add a hacked local LicenseUtils
-
-
-=head1 VERSION
-
-This document describes Test::Software::LicenseUtils version 0.001002
-
   
 =head1 DESCRIPTION
 
