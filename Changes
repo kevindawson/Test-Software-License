@@ -1,6 +1,8 @@
 Revision history for Test-Software-License
 
 {{$NEXT}}
+
+0.001005  2013-10-18 23:55:22 BST
  - tweak dependancies for travis
 
 0.001004  2013-10-18 23:02:36 BST
