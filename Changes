@@ -1,5 +1,10 @@
 Revision history for Test-Software-License
 
+{{$NEXT}}
+ - try and sort out my bad with version license and milla
+ - drop min perl to 5.008009
+ - remove some cruff
+
 0.001003  2013-10-16 22:02:02 BST
  - Add a hacked local LicenseUtils
  - get rid of the script and provide it in eg
