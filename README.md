@@ -2,19 +2,11 @@
 
 Test::Software::License - just another xt for Software::License
 
-
-
-# VERSION
-
-This document describes Test::Software::License version 0.001002
-
-
-
 # SYNOPSIS
 
 	use Test::More;
 	use Test::Requires {
-		'Test::Software::License' => 0.00,
+		'Test::Software::License' => 0.001,
 	};
 
 	all_software_license_ok();
@@ -74,3 +66,4 @@ it under the same terms as Perl itself.
 # SEE ALSO
 
 [Software::License](http://search.cpan.org/perldoc?Software::License)
+[XT::Manager](http://search.cpan.org/perldoc?XT::Manager)

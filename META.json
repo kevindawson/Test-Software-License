@@ -37,26 +37,26 @@
       "runtime" : {
          "requires" : {
             "Carp" : "1.32",
-            "Data::Printer" : "0.35",
-            "English" : "0",
             "Exporter" : "5.68",
             "File::Find::Rule" : "0.33",
             "File::Find::Rule::Perl" : "1.13",
             "File::Slurp" : "9999.19",
-            "Software::LicenseUtils" : "0.103005",
-            "Test::Builder" : "0.98",
+            "File::Spec" : "3.4",
+            "IO::Dir" : "1.25",
+            "Module::Load" : "0.24",
+            "Software::License" : "0.103005",
+            "Test::Builder" : "0.99",
             "Try::Tiny" : "0.18",
             "constant" : "1.27",
             "parent" : "0.228",
-            "perl" : "5.010000",
-            "strict" : "0",
-            "version" : "0.9904",
-            "warnings" : "0"
+            "perl" : "5.008009",
+            "version" : "0.9904"
          }
       },
       "test" : {
          "requires" : {
-            "Test::More" : "0.98"
+            "Test::More" : "0.99",
+            "Test::Requires" : "0.07"
          },
          "suggests" : {
             "Test::Pod" : "1.48",
@@ -76,7 +76,7 @@
          "web" : "https://github.com/kevindawson/Test-Software-License"
       }
    },
-   "version" : "0.001003",
+   "version" : "0.001004",
    "x_contributors" : [
       "bowtie <bowtie@cpan.org>"
    ]

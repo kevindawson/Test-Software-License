@@ -1,6 +1,8 @@
 Revision history for Test-Software-License
 
 {{$NEXT}}
+
+0.001004  2013-10-18 23:02:36 BST
  - try and sort out my bad with version license and milla
  - drop min perl to 5.008009
  - remove some cruff
