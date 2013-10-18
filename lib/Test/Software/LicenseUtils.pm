@@ -101,14 +101,16 @@ sub guess_license_from_pod {
 
 
 sub guess_license_from_meta {
-  my ($class, $meta_text) = @_;
+#  my ($class, $meta_text) = @_;
+  my ($class, $license_text) = @_;
+
   die "can't call guess_license_* in scalar context" unless wantarray;
 
 # see https://github.com/rjbs/Software-License/pull/17/files
 #  my ($license_text) = $meta_text =~ m{\b["']?license["']?\s*:\s*\[?\s*["']?([a-z_]+)["']?}gm or return;
 
 
-  my ($license_text) = $meta_text =~ m{\b["']?license["']?\s*:\s*\[?\s*["']?([a-z_]+[\d]*)["']?}gm;
+#  my ($license_text) = $meta_text =~ m{\b["']?license["']?\s*:\s*\[?\s*["']?([a-z_]+[\d]*)["']?}gm;
 
   return unless $license_text and my $license = $meta_keys{ $license_text };
 

@@ -19,6 +19,7 @@ use File::Slurp;
 use File::Find::Rule       ();
 use File::Find::Rule::Perl ();
 use Try::Tiny;
+use Parse::CPAN::Meta 1.4405;
 
 use constant {FFR => 'File::Find::Rule', TRUE => 1, FALSE => 0,};
 
@@ -146,9 +147,12 @@ sub all_software_license_from_metayml_ok {
 
 	if (-e 'META.yml') {
 		try {
-			my $meta_yml = read_file('META.yml');
+#			my $meta_yml = read_file('META.yml');
+			my $meta_yml = Parse::CPAN::Meta->load_file('META.yml');
+#p $meta_yml;
+#p $meta_yml->{license};
 			my @guess_yml
-				= Test::Software::LicenseUtils->guess_license_from_meta($meta_yml);
+				= Test::Software::LicenseUtils->guess_license_from_meta($meta_yml->{license});
 			if (@guess_yml) {
 				$Test->ok(1, "META.yml -> @guess_yml");
 				$passed_a_test = TRUE;
@@ -171,9 +175,15 @@ sub all_software_license_from_metajson_ok {
 
 	if (-e 'META.json') {
 		try {
-			my $meta_json = read_file('META.json');
+#			my $meta_json = read_file('META.json');
+			my $meta_json = Parse::CPAN::Meta->load_file('META.json');
+#p $meta_json;
+#p $meta_json->{license}->[0];
+
 			my @guess_json
-				= Test::Software::LicenseUtils->guess_license_from_meta($meta_json);
+				= Test::Software::LicenseUtils->guess_license_from_meta($meta_json->{license}->[0]);
+#			my @guess_json
+#				= Test::Software::LicenseUtils->guess_license_from_meta($meta_json);
 
 			if (@guess_json) {
 				$Test->ok(1, "META.json -> @guess_json");

@@ -9,6 +9,7 @@ requires 'File::Slurp',            '9999.19';
 requires 'File::Spec',             '3.4';
 requires 'IO::Dir',                '1.07';
 requires 'Module::Load',           '0.24';
+requires 'Parse::CPAN::Meta',      '1.4409';
 requires 'Software::License',      '0.103005';
 requires 'Test::Builder',          '0.99';
 requires 'Try::Tiny',              '0.18';
