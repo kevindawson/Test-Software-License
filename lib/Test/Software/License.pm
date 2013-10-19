@@ -55,6 +55,7 @@ sub all_software_license_ok {
 	all_software_license_from_perlmodule_ok();
 	all_software_license_from_metayml_ok();
 	all_software_license_from_metajson_ok();
+	all_software_license_from_LICENSE_ok();
 	$Test->ok($passed_a_test,
 		'This distribution appears to have a valid License');
 	return;
@@ -127,7 +128,8 @@ sub _guess_license {
 	try {
 		foreach my $file (@{$files_ref}) {
 			my $ps_text = read_file($file);
-			my @guesses = Test::Software::LicenseUtils->guess_license_from_pod($ps_text);
+			my @guesses
+				= Test::Software::LicenseUtils->guess_license_from_pod($ps_text);
 
 			if ($#guesses >= 0) {
 				$Test->ok(1, "$file -> @guesses");
@@ -147,12 +149,9 @@ sub all_software_license_from_metayml_ok {
 
 	if (-e 'META.yml') {
 		try {
-#			my $meta_yml = read_file('META.yml');
-			my $meta_yml = Parse::CPAN::Meta->load_file('META.yml');
-#p $meta_yml;
-#p $meta_yml->{license};
-			my @guess_yml
-				= Test::Software::LicenseUtils->guess_license_from_meta($meta_yml->{license});
+			my $meta_yml  = Parse::CPAN::Meta->load_file('META.yml');
+			my @guess_yml = Test::Software::LicenseUtils->guess_license_from_meta(
+				$meta_yml->{license});
 			if (@guess_yml) {
 				$Test->ok(1, "META.yml -> @guess_yml");
 				$passed_a_test = TRUE;
@@ -175,24 +174,22 @@ sub all_software_license_from_metajson_ok {
 
 	if (-e 'META.json') {
 		try {
-#			my $meta_json = read_file('META.json');
 			my $meta_json = Parse::CPAN::Meta->load_file('META.json');
-#p $meta_json;
-#p $meta_json->{license}->[0];
 
-			my @guess_json
-				= Test::Software::LicenseUtils->guess_license_from_meta($meta_json->{license}->[0]);
-#			my @guess_json
-#				= Test::Software::LicenseUtils->guess_license_from_meta($meta_json);
+			foreach my $json_license (@{$meta_json->{license}}) {
+				my @guess_json
+					= Test::Software::LicenseUtils->guess_license_from_meta(
+					$json_license);
 
-			if (@guess_json) {
-				$Test->ok(1, "META.json -> @guess_json");
-				$passed_a_test = TRUE;
-			}
-			else {
-				$Test->ok(0, 'META.json -> license unknown');
-				$passed_a_test = FALSE;
+				if (@guess_json) {
+					$Test->ok(1, "META.json -> @guess_json");
+					$passed_a_test = TRUE;
+				}
+				else {
+					$Test->ok(0, 'META.json -> license unknown');
+					$passed_a_test = FALSE;
 
+				}
 			}
 		};
 	}
@@ -201,6 +198,22 @@ sub all_software_license_from_metajson_ok {
 	}
 	return;
 }
+
+
+sub all_software_license_from_LICENSE_ok {
+	my $Test = Test::Builder->new;
+
+	if (-e 'LICENSE') {
+		$Test->ok(1, 'LICENSE file found');
+		$passed_a_test = TRUE;
+	}
+	else {
+		$Test->ok(0, 'LICENSE file not found');
+		$passed_a_test = FALSE;
+	}
+	return;
+}
+
 
 1;    # Magic true value required at end of module
 
@@ -229,7 +242,7 @@ This document describes Test::Software::License version 0.001005
 
 	done_testing();
 
-see eg/ for a compleat test files
+For an example of a compleat test file look in eg/test-software-license.t
 
 =head1 DESCRIPTION
 
@@ -242,7 +255,8 @@ this should be treated as beta, as initial release
 
 =item * all_software_license_from_meta_ok
 
-If you just want to test the META files only
+If you just want to test the META files only you could use this method.
+
 
 =item * all_software_license_from_metajson_ok
 
@@ -250,15 +264,23 @@ If you just want to test the META files only
 
 =item * all_software_license_from_perlmodule_ok
 
-If you just want to test the contents of lib directories
+If you just want to test the contents of lib directories you could use this method.
+
 
 =item * all_software_license_from_perlscript_ok
 
-If you just want to test  the contents script and bin directories
+If you just want to test  the contents script and bin directories you could use this method.
+
 
 =item * all_software_license_ok
 
-This is the main method you should use.
+This is the main method you should use, it uses all of the other methods to check your distributin for License information.
+
+
+=item * all_software_license_from_LICENSE_ok
+
+If you want to test for the presence of a LICENSE file you could use this method.
+
 
 =item * import
 

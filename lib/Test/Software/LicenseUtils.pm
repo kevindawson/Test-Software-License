@@ -102,7 +102,7 @@ sub guess_license_from_pod {
 
 sub guess_license_from_meta {
 #  my ($class, $meta_text) = @_;
-  my ($class, $license_text) = @_;
+  my ($class, $license_str) = @_;
 
   die "can't call guess_license_* in scalar context" unless wantarray;
 
@@ -112,7 +112,7 @@ sub guess_license_from_meta {
 
 #  my ($license_text) = $meta_text =~ m{\b["']?license["']?\s*:\s*\[?\s*["']?([a-z_]+[\d]*)["']?}gm;
 
-  return unless $license_text and my $license = $meta_keys{ $license_text };
+  return unless $license_text and my $license = $meta_keys{ $license_str };
 
   return map { "Software::License::$_" } sort keys %$license;
 }
@@ -139,7 +139,8 @@ This document describes Test::Software::LicenseUtils version 0.001005
 
 =head1 DESCRIPTION
 
-This is a hack of Software::LicenseUtils which includes #issue16 and #issue17
+This is a hack of Software::LicenseUtils which includes #issue17
+and other hacks
 
 =head1 METHODS
 
@@ -157,11 +158,12 @@ Calling this method in scalar context is a fatal error.
 
 =item * guess_license_from_meta
 
-  my @guesses = Software::LicenseUtils->guess_license_from_meta($meta_str);
+  my @guesses = Software::LicenseUtils->guess_license_from_meta($license_str);
 
-Given the content of the META.(yml|json) file found in a CPAN distribution, this
-method makes a guess as to which licenses may apply to the distribution.  It
-will return a list of zero or more Software::License instances or classes.
+Given the license content of the META.(yml|json) file found using
+L<Parse::CPAN::Meta> distribution, this method makes a guess as to which
+licenses may apply to the distribution. It will return a list of zero or
+more Software::License instances or classes.
 
 
 =back
