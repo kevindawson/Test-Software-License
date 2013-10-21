@@ -3,8 +3,8 @@ package Test::Software::LicenseUtils;
 use strict;
 use warnings;
 
-use Software::License 0.103005;
-# use Data::Printer {caller_info => 1, colored => 1,};
+use Software::LicenseUtils 0.103006;
+use Data::Printer {caller_info => 1, colored => 1,};
 use version;
 our $VERSION = '0.001005';
 
@@ -101,21 +101,35 @@ sub guess_license_from_pod {
 
 
 sub guess_license_from_meta {
-#  my ($class, $meta_text) = @_;
-  my ($class, $license_str) = @_;
-
+  my ($class, $meta_text) = @_;
+p $meta_text;
   die "can't call guess_license_* in scalar context" unless wantarray;
-
-# see https://github.com/rjbs/Software-License/pull/17/files
-#  my ($license_text) = $meta_text =~ m{\b["']?license["']?\s*:\s*\[?\s*["']?([a-z_]+)["']?}gm or return;
-
-
-#  my ($license_text) = $meta_text =~ m{\b["']?license["']?\s*:\s*\[?\s*["']?([a-z_]+[\d]*)["']?}gm;
-
-  return unless $license_str and my $license = $meta_keys{ $license_str };
-
+ 
+  my ($license_text) = $meta_text =~ m{\b["']?license["']?\s*:\s*["']?([a-z_]+)["']?}gm;
+p $license_text; 
+  return unless $license_text and my $license = $meta_keys{ $license_text };
+p $license; 
   return map { "Software::License::$_" } sort keys %$license;
 }
+
+
+
+#sub guess_license_from_meta {
+#  my ($class, $meta_text) = @_;
+##  my ($class, $license_str) = @_;
+#p $meta_text;
+#  die "can't call guess_license_* in scalar context" unless wantarray;
+#
+## see https://github.com/rjbs/Software-License/pull/17/files
+##  my ($license_text) = $meta_text =~ m{\b["']?license["']?\s*:\s*\[?\s*["']?([a-z_]+)["']?}gm or return;
+#
+#
+#	my ($license_text) = $meta_text =~ m{\b["']?license["']?\s*:\s*\[?\s*["']?([a-z_]+[\d]*)["']?}gm;
+#p $license_text;
+#  return unless $license_text and my $license = $Software::LicenseUtils::meta_keys{ $license_text };
+#p $license;
+#  return map { "Software::License::$_" } sort keys %$license;
+#}
 
 *guess_license_from_meta_yml = \&guess_license_from_meta;
 
