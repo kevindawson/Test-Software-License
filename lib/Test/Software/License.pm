@@ -175,9 +175,7 @@ sub all_software_license_from_metajson_ok {
 			my $meta_json = Parse::CPAN::Meta->load_file('META.json');
 
 			foreach my $json_license (@{$meta_json->{license}}) {
-				my @guess_json
-					= Software::LicenseUtils->guess_license_from_meta(
-					$json_license);
+				my @guess_json = hack_guess_license_from_meta($json_license);
 
 				if (@guess_json) {
 					$Test->ok(1, "META.json -> @guess_json");
@@ -216,46 +214,15 @@ sub all_software_license_from_LICENSE_ok {
 ## override
 #######
 sub hack_guess_license_from_meta {
-  my $license_str = shift;
+	my $license_str = shift;
+# p $license_str;
 
-
-
-
-Software::LicenseUtils->guess_license_from_meta(
-					$json_license);
-
-				if (@guess_json) {
-					$Test->ok(1, "META.json -> @guess_json");
-					$passed_a_test = TRUE;
-				}
-				else {
-					$Test->ok(0, 'META.json -> license unknown');
-					$passed_a_test = FALSE;
-
-				}
-			}
-		};
-	}
-	else {
-		$Test->skip('no META.json found');
-	}
-	return;
+	my $hack = 'license : '.$license_str;
+# p $hack;
+	my @guess = Software::LicenseUtils->guess_license_from_meta($hack);
+# p @guess;
+	return @guess;
 }
-
-
-  die "can't call guess_license_* in scalar context" unless wantarray;
-
-# see https://github.com/rjbs/Software-License/pull/17/files
-#  my ($license_text) = $meta_text =~ m{\b["']?license["']?\s*:\s*\[?\s*["']?([a-z_]+)["']?}gm or return;
-
-
-#  my ($license_text) = $meta_text =~ m{\b["']?license["']?\s*:\s*\[?\s*["']?([a-z_]+[\d]*)["']?}gm;
-
-  return unless $license_str and my $license = $Software::LicenseUtils::meta_keys{ $license_str };
-
-  return map { "Software::License::$_" } sort keys %$license;
-}
-
 
 1;    # Magic true value required at end of module
 
