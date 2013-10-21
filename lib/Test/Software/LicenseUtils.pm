@@ -112,7 +112,7 @@ sub guess_license_from_meta {
 
 #  my ($license_text) = $meta_text =~ m{\b["']?license["']?\s*:\s*\[?\s*["']?([a-z_]+[\d]*)["']?}gm;
 
-  return unless $license_text and my $license = $meta_keys{ $license_str };
+  return unless $license_str and my $license = $meta_keys{ $license_str };
 
   return map { "Software::License::$_" } sort keys %$license;
 }
@@ -127,7 +127,7 @@ __END__
 
 =pod
 
-=encoding utf-8
+=encoding UTF-8
 
 =head1 NAME
 
