@@ -4,7 +4,7 @@ use strict;
 use warnings;
 
 use Software::LicenseUtils 0.103006;
-use Data::Printer {caller_info => 1, colored => 1,};
+# use Data::Printer {caller_info => 1, colored => 1,};
 use version;
 our $VERSION = '0.001005';
 
@@ -102,13 +102,13 @@ sub guess_license_from_pod {
 
 sub guess_license_from_meta {
   my ($class, $meta_text) = @_;
-p $meta_text;
+#p $meta_text;
   die "can't call guess_license_* in scalar context" unless wantarray;
  
   my ($license_text) = $meta_text =~ m{\b["']?license["']?\s*:\s*["']?([a-z_]+)["']?}gm;
-p $license_text; 
+#p $license_text; 
   return unless $license_text and my $license = $meta_keys{ $license_text };
-p $license; 
+#p $license; 
   return map { "Software::License::$_" } sort keys %$license;
 }
 
