@@ -10,7 +10,7 @@ requires 'File::Spec',             '3.4';
 requires 'IO::Dir',                '1.07';
 requires 'Module::Load',           '0.24';
 requires 'Parse::CPAN::Meta',      '1.4409';
-requires 'Software::License',      '0.103005';
+requires 'Software::LicenseUtils', '0.103006';
 requires 'Test::Builder',          '0.99';
 requires 'Try::Tiny',              '0.18';
 requires 'constant',               '1.27';
