@@ -14,6 +14,7 @@ use parent 0.225 qw(Exporter);
 
 # use Data::Printer {caller_info => 1, colored => 1,};
 use Software::LicenseUtils 0.103006;
+
 use File::Slurp;
 use File::Find::Rule       ();
 use File::Find::Rule::Perl ();
@@ -127,8 +128,7 @@ sub _guess_license {
 	try {
 		foreach my $file (@{$files_ref}) {
 			my $ps_text = read_file($file);
-			my @guesses
-				= Software::LicenseUtils->guess_license_from_pod($ps_text);
+			my @guesses = Software::LicenseUtils->guess_license_from_pod($ps_text);
 
 			if ($#guesses >= 0) {
 				$Test->ok(1, "$file -> @guesses");
@@ -149,7 +149,7 @@ sub all_software_license_from_metayml_ok {
 	if (-e 'META.yml') {
 		try {
 			my $meta_yml  = Parse::CPAN::Meta->load_file('META.yml');
-			my @guess_yml = hack_guess_license_from_meta($meta_yml->{license});
+			my @guess_yml = _hack_guess_license_from_meta($meta_yml->{license});
 			if (@guess_yml) {
 				$Test->ok(1, "META.yml -> @guess_yml");
 				$passed_a_test = TRUE;
@@ -175,8 +175,7 @@ sub all_software_license_from_metajson_ok {
 			my $meta_json = Parse::CPAN::Meta->load_file('META.json');
 
 			foreach my $json_license (@{$meta_json->{license}}) {
-				my @guess_json = hack_guess_license_from_meta($json_license);
-
+				my @guess_json = _hack_guess_license_from_meta($json_license);
 				if (@guess_json) {
 					$Test->ok(1, "META.json -> @guess_json");
 					$passed_a_test = TRUE;
@@ -210,21 +209,22 @@ sub all_software_license_from_LICENSE_ok {
 	return;
 }
 
+
 #######
 ## override
 #######
-sub hack_guess_license_from_meta {
+sub _hack_guess_license_from_meta {
 	my $license_str = shift;
-# p $license_str;
 
-	my $hack = 'license : '.$license_str;
-# p $hack;
+	my $hack = 'license : ' . $license_str;
+	p $hack;
 	my @guess = Software::LicenseUtils->guess_license_from_meta($hack);
-# p @guess;
 	return @guess;
+
 }
 
-1;    # Magic true value required at end of module
+
+1;
 
 __END__
 
