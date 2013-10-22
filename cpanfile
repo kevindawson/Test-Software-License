@@ -1,5 +1,5 @@
 # cpanfile
-requires 'perl', '5.008009';
+requires 'perl', '5.008004';
 
 requires 'Carp',                   '1.32';
 requires 'Exporter',               '5.68';

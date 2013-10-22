@@ -1,6 +1,6 @@
 package Test::Software::License;
 
-use 5.008009;
+use 5.008004;
 use warnings;
 use strict;
 use Carp;
@@ -217,7 +217,6 @@ sub _hack_guess_license_from_meta {
 	my $license_str = shift;
 
 	my $hack = 'license : ' . $license_str;
-	p $hack;
 	my @guess = Software::LicenseUtils->guess_license_from_meta($hack);
 	return @guess;
 

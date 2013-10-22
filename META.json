@@ -44,12 +44,13 @@
             "File::Spec" : "3.4",
             "IO::Dir" : "1.07",
             "Module::Load" : "0.24",
-            "Software::License" : "0.103005",
+            "Parse::CPAN::Meta" : "1.4409",
+            "Software::LicenseUtils" : "0.103006",
             "Test::Builder" : "0.99",
             "Try::Tiny" : "0.18",
             "constant" : "1.27",
             "parent" : "0.228",
-            "perl" : "5.008009",
+            "perl" : "5.008004",
             "version" : "0.9904"
          }
       },
@@ -76,7 +77,7 @@
          "web" : "https://github.com/kevindawson/Test-Software-License"
       }
    },
-   "version" : "0.001005",
+   "version" : "0.001006",
    "x_contributors" : [
       "bowtie <bowtie@cpan.org>"
    ]
