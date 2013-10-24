@@ -12,7 +12,7 @@ local $OUTPUT_AUTOFLUSH = 1;
 
 use parent 0.225 qw(Exporter);
 
-# use Data::Printer {caller_info => 1, colored => 1,};
+use Data::Printer {caller_info => 1, colored => 1,};
 use Software::LicenseUtils 0.103006;
 
 use File::Slurp;
@@ -21,7 +21,7 @@ use File::Find::Rule::Perl ();
 use Try::Tiny;
 use Parse::CPAN::Meta 1.4405;
 
-use constant {FFR => 'File::Find::Rule', TRUE => 1, FALSE => 0,};
+use constant {FFR => 'File::Find::Rule', TRUE => 1, FALSE => 0, EMPTY => -1};
 
 use Test::Builder 0.98;
 
@@ -35,14 +35,13 @@ use Test::Builder 0.98;
 
 my $passed_a_test = FALSE;
 
-
 sub import {
-	my $self = shift;
+	my ($self, @plan) = @_;
 	my $pack = caller;
-	my $Test = Test::Builder->new;
+	my $test = Test::Builder->new;
 
-	$Test->exported_to($pack);
-	$Test->plan(@_);
+	$test->exported_to($pack);
+	$test->plan(@plan);
 
 	$self->export_to_level(1, $self, @Test::Software::License::EXPORT);
 	return;
@@ -50,68 +49,59 @@ sub import {
 
 
 sub all_software_license_ok {
-	my $Test = Test::Builder->new;
+	my $test = Test::Builder->new;
 	all_software_license_from_perlscript_ok();
 	all_software_license_from_perlmodule_ok();
 	all_software_license_from_metayml_ok();
 	all_software_license_from_metajson_ok();
-	all_software_license_from_LICENSE_ok();
-	$Test->ok($passed_a_test,
+	_check_for_license_file();
+	$test->ok($passed_a_test,
 		'This distribution appears to have a valid License');
 	return;
 }
 
 
 sub all_software_license_from_meta_ok {
-	my $Test = Test::Builder->new;
+	my $test = Test::Builder->new;
 	all_software_license_from_metayml_ok();
 	all_software_license_from_metajson_ok();
-	$Test->ok($passed_a_test,
+	$test->ok($passed_a_test,
 		'This distribution appears to have a valid License');
 	return;
 }
 
 
 sub all_software_license_from_perlmodule_ok {
-	my $Test = Test::Builder->new;
-
+	my $test  = Test::Builder->new;
 	my @files = FFR->perl_module->in('lib');
 
-	if ($#files == -1) {
-		$Test->skip('no perl_module found in lib');
+	if ($#files == EMPTY) {
+		$test->skip('no perl_module found in lib');
 	}
 	else {
-
-
 		my $found_perl_modules = $#files + 1;
-		$Test->ok($files[0],
+		$test->ok($files[0],
 			'found (' . $found_perl_modules . ') perl modules to test');
-
 		_guess_license(\@files);
-
 	}
 	return;
 }
 
 
 sub all_software_license_from_perlscript_ok {
-	my $Test = Test::Builder->new;
+	my $test = Test::Builder->new;
 
 	my @dirs = qw( script bin );
 	foreach my $dir (@dirs) {
 		my @files = FFR->perl_script->in($dir);
-
-		if ($#files == -1) {
-			$Test->skip('no perl_scripts found in ' . $dir);
+		if ($#files == EMPTY) {
+			$test->skip('no perl_scripts found in ' . $dir);
 		}
 		else {
 			my $found_perl_scripts = $#files + 1;
-			$Test->ok($files[0],
+			$test->ok($files[0],
 				'found (' . $found_perl_scripts . ') perl script to test in ' . $dir);
-
-
 			_guess_license(\@files);
-
 		}
 	}
 	return;
@@ -123,19 +113,18 @@ sub all_software_license_from_perlscript_ok {
 #######
 sub _guess_license {
 	my $files_ref = shift;
-	my $Test      = Test::Builder->new;
+	my $test      = Test::Builder->new;
 
 	try {
 		foreach my $file (@{$files_ref}) {
 			my $ps_text = read_file($file);
 			my @guesses = Software::LicenseUtils->guess_license_from_pod($ps_text);
-
 			if ($#guesses >= 0) {
-				$Test->ok(1, "$file -> @guesses");
+				$test->ok(1, "$file -> @guesses");
 				$passed_a_test = TRUE;
 			}
 			else {
-				$Test->skip('no licence found in ' . $file);
+				$test->skip('no licence found in ' . $file);
 			}
 		}
 	};
@@ -144,68 +133,59 @@ sub _guess_license {
 
 
 sub all_software_license_from_metayml_ok {
-	my $Test = Test::Builder->new;
+	my $test = Test::Builder->new;
 
 	if (-e 'META.yml') {
 		try {
 			my $meta_yml  = Parse::CPAN::Meta->load_file('META.yml');
 			my @guess_yml = _hack_guess_license_from_meta($meta_yml->{license});
 			if (@guess_yml) {
-				$Test->ok(1, "META.yml -> @guess_yml");
+				$test->ok(1, "META.yml -> @guess_yml");
 				$passed_a_test = TRUE;
 			}
 			else {
-				$Test->ok(0, 'META.yml -> license unknown');
+				$test->ok(0, 'META.yml -> license unknown');
 				$passed_a_test = FALSE;
 			}
 		};
 	}
 	else {
-		$Test->skip('no META.yml found');
+		$test->skip('no META.yml found');
 	}
 	return;
 }
 
 
 sub all_software_license_from_metajson_ok {
-	my $Test = Test::Builder->new;
+	my $test = Test::Builder->new;
 
 	if (-e 'META.json') {
 		try {
 			my $meta_json = Parse::CPAN::Meta->load_file('META.json');
-
 			foreach my $json_license (@{$meta_json->{license}}) {
 				my @guess_json = _hack_guess_license_from_meta($json_license);
 				if (@guess_json) {
-					$Test->ok(1, "META.json -> @guess_json");
+					$test->ok(1, "META.json -> @guess_json");
 					$passed_a_test = TRUE;
 				}
 				else {
-					$Test->ok(0, 'META.json -> license unknown');
+					$test->ok(0, 'META.json -> license unknown');
 					$passed_a_test = FALSE;
-
 				}
 			}
 		};
 	}
 	else {
-		$Test->skip('no META.json found');
+		$test->skip('no META.json found');
 	}
 	return;
 }
 
 
-sub all_software_license_from_LICENSE_ok {
-	my $Test = Test::Builder->new;
+sub _check_for_license_file {
+	my $test = Test::Builder->new;
 
-	if (-e 'LICENSE') {
-		$Test->ok(1, 'LICENSE file found');
-		$passed_a_test = TRUE;
-	}
-	else {
-		$Test->ok(0, 'LICENSE file not found');
-		$passed_a_test = FALSE;
-	}
+	$test->ok(-e 'LICENSE', 'LICENSE file found');
 	return;
 }
 
@@ -215,11 +195,12 @@ sub all_software_license_from_LICENSE_ok {
 #######
 sub _hack_guess_license_from_meta {
 	my $license_str = shift;
-
-	my $hack = 'license : ' . $license_str;
-	my @guess = Software::LicenseUtils->guess_license_from_meta($hack);
+	my @guess;
+	try {
+		my $hack = 'license : ' . $license_str;
+		@guess = Software::LicenseUtils->guess_license_from_meta($hack);
+	};
 	return @guess;
-
 }
 
 
@@ -250,7 +231,7 @@ This document describes Test::Software::License version 0.001005
 
 	done_testing();
 
-For an example of a compleat test file look in eg/test-software-license.t
+For an example of a complete test file look in eg/test-software-license.t
 
 =head1 DESCRIPTION
 
@@ -277,12 +258,14 @@ If you just want to test the contents of lib directories you could use this meth
 
 =item * all_software_license_from_perlscript_ok
 
-If you just want to test  the contents script and bin directories you could use this method.
+If you just want to test  the contents script and bin directories you could
+use this method.
 
 
 =item * all_software_license_ok
 
-This is the main method you should use, it uses all of the other methods to check your distributin for License information.
+This is the main method you should use, it uses all of the other methods to
+check your distribution for License information.
 
 
 =item * all_software_license_from_LICENSE_ok
@@ -304,8 +287,8 @@ none at present
 
 =head1 COPYRIGHT
 
-Copyright E<copy> 2013 the Test::Software::License  L</AUTHOR> and L</CONTRIBUTORS>
-as listed above.
+Copyright E<copy> 2013 the Test::Software::License
+L</AUTHOR> and L</CONTRIBUTORS> as listed above.
 
 
 =head1 LICENSE
