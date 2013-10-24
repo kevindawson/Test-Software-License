@@ -12,7 +12,7 @@ local $OUTPUT_AUTOFLUSH = 1;
 
 use parent 0.225 qw(Exporter);
 
-use Data::Printer {caller_info => 1, colored => 1,};
+# use Data::Printer {caller_info => 1, colored => 1,};
 use Software::LicenseUtils 0.103006;
 
 use File::Slurp;
