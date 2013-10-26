@@ -41,9 +41,6 @@
             "File::Find::Rule" : "0.33",
             "File::Find::Rule::Perl" : "1.13",
             "File::Slurp" : "9999.19",
-            "File::Spec" : "3.4",
-            "IO::Dir" : "1.07",
-            "Module::Load" : "0.24",
             "Parse::CPAN::Meta" : "1.4409",
             "Software::LicenseUtils" : "0.103006",
             "Test::Builder" : "0.99",
@@ -60,6 +57,9 @@
             "Test::Requires" : "0.07"
          },
          "suggests" : {
+            "ExtUtils::MakeMaker" : "6.8",
+            "File::Spec::Functions" : "3.4",
+            "List::Util" : "1.35",
             "Test::Pod" : "1.48",
             "Test::Pod::Coverage" : "1.08"
          }
