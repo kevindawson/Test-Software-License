@@ -7,7 +7,7 @@ our $VERSION = '0.04';
 use English qw( -no_match_vars );    # Avoids regex performance penalty
 local $OUTPUT_AUTOFLUSH = 1;
 
-use Test::Requires {'ExtUtils::MakeMaker'   => 6.80};
+use Test::Requires {'ExtUtils::MakeMaker'   => 6.66};
 use Test::Requires {'File::Spec::Functions' => 3.40};
 use Test::Requires {'List::Util'            => 1.32};
 

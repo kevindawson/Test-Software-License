@@ -18,7 +18,7 @@ on test => sub {
 	requires 'Test::More',     '0.99';
 	requires 'Test::Requires', '0.07';
 
-	suggests 'ExtUtils::MakeMaker',   '6.8';
+	suggests 'ExtUtils::MakeMaker',   '6.66';
 	suggests 'File::Spec::Functions', '3.4';
 	suggests 'List::Util',            '1.35';
 	suggests 'Test::Pod',             '1.48';

@@ -57,7 +57,7 @@
             "Test::Requires" : "0.07"
          },
          "suggests" : {
-            "ExtUtils::MakeMaker" : "6.8",
+            "ExtUtils::MakeMaker" : "6.66",
             "File::Spec::Functions" : "3.4",
             "List::Util" : "1.35",
             "Test::Pod" : "1.48",
