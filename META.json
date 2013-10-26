@@ -59,7 +59,7 @@
          "suggests" : {
             "ExtUtils::MakeMaker" : "6.66",
             "File::Spec::Functions" : "3.4",
-            "List::Util" : "1.35",
+            "List::Util" : "1.27",
             "Test::Pod" : "1.48",
             "Test::Pod::Coverage" : "1.08"
          }

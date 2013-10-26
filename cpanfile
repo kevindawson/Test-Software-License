@@ -20,7 +20,7 @@ on test => sub {
 
 	suggests 'ExtUtils::MakeMaker',   '6.66';
 	suggests 'File::Spec::Functions', '3.4';
-	suggests 'List::Util',            '1.35';
+	suggests 'List::Util',            '1.27';
 	suggests 'Test::Pod',             '1.48';
 	suggests 'Test::Pod::Coverage',   '1.08';
 };
