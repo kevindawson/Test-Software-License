@@ -31,6 +31,9 @@ use Test::Builder 0.98;
 
 my $passed_a_test = FALSE;
 
+#######
+# import
+#######
 sub import {
 	my ($self, @args) = @_;
 	my $pack = caller;
@@ -43,7 +46,9 @@ sub import {
 	return 1;
 }
 
-
+#######
+# all_software_license_ok
+#######
 sub all_software_license_ok {
 	my $options = shift if ref $_[0] eq 'HASH';
 	$options ||= {strict => FALSE};
@@ -61,17 +66,9 @@ sub all_software_license_ok {
 	return;
 }
 
-
-#sub all_software_license_from_meta_ok {
-#	my $test = Test::Builder->new;
-#	all_software_license_from_metayml_ok();
-#	all_software_license_from_metajson_ok();
-#	$test->ok($passed_a_test,
-#		'This distribution appears to have a valid License');
-#	return;
-#}
-
-
+#######
+# _from_perlmodule_ok
+#######
 sub _from_perlmodule_ok {
 	my $options = shift;
 	my $test    = Test::Builder->new;
@@ -91,7 +88,9 @@ sub _from_perlmodule_ok {
 	return;
 }
 
-
+#######
+# _from_perlscript_ok
+#######
 sub _from_perlscript_ok {
 	my $options = shift;
 	my $test    = Test::Builder->new;
@@ -106,17 +105,13 @@ sub _from_perlscript_ok {
 			if (not $options->{strict}) {
 				my $found_perl_scripts = $#files + 1;
 				$test->ok($files[0],
-					    'found ('
-						. $found_perl_scripts
-						. ') perl script to test in '
-						. $dir);
+					"found ($found_perl_scripts) perl script to test in $dir");
 			}
 			_guess_license($options, \@files);
 		}
 	}
 	return;
 }
-
 
 #######
 # composed method test for license
@@ -147,7 +142,9 @@ sub _guess_license {
 	return;
 }
 
-
+#######
+# _from_metayml_ok
+#######
 sub _from_metayml_ok {
 	my $options = shift;
 	my $test    = Test::Builder->new;
@@ -177,7 +174,9 @@ sub _from_metayml_ok {
 	return;
 }
 
-
+#######
+# _from_metajson_ok
+#######
 sub _from_metajson_ok {
 	my $options = shift;
 	my $test    = Test::Builder->new;
@@ -209,7 +208,9 @@ sub _from_metajson_ok {
 	return;
 }
 
-
+#######
+# _check_for_license_file
+#######
 sub _check_for_license_file {
 	my $options = shift;
 	my $test    = Test::Builder->new;
@@ -227,7 +228,6 @@ sub _check_for_license_file {
 	}
 	return;
 }
-
 
 #######
 ## hack to support meta license strings
@@ -291,8 +291,8 @@ check your distribution for License information.
 
 	all_software_license_ok();
 
-or if you want to check every perl file in your distibution has a valied license
-the following is brutal, good for finding CPANTS issues if thats your thing.
+If you want to check every perl file in your distribution has a valid license
+use the following, its brutal, good for finding CPANTS issues if that is your thing.
 
 	all_software_license_ok({ strict => 1 });
 
