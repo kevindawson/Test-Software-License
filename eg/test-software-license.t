@@ -18,6 +18,9 @@ use Test::Requires {
 
 all_software_license_ok();
 
+# the following is brutal, if it exists it must have a license
+# all_software_license_ok({ strict => 1 });
+
 done_testing();
 
 __END__
