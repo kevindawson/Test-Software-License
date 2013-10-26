@@ -1,25 +1,25 @@
 Revision history for Test-Software-License
 
 {{$NEXT}}
+ - UpDate Changes to strict [22a9ee2]
 
-0.001005  2013-10-18 23:55:22 BST
+0.001005 2013-10-18T23:55:22Z BST
  - tweak dependancies for travis
 
-0.001004  2013-10-18 23:02:36 BST
+0.001004 2013-10-18T23:02:36Z BST
  - try and sort out my bad with version license and milla
  - drop min perl to 5.008009
  - remove some cruff
 
-0.001003  2013-10-16 22:02:02 BST
+0.001003 2013-10-16T22:02:02Z BST
  - Add a hacked local LicenseUtils
  - get rid of the script and provide it in eg
 
-0.001002  2013-10-15
+0.001002 2013-10-15
  - skipped
 
-0.001001  2013-10-14 23:34:09 BST
+0.001001 2013-10-14T23:34:09Z BST
  - let's share what we have done so far
 
-0.001000 2013:10:10T15:03:34
+0.001000 2013-10-10T15:03:34Z
  - Initial release.
-
