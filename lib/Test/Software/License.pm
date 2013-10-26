@@ -27,48 +27,54 @@ use Test::Builder 0.98;
 
 @Test::Software::License::EXPORT = qw(
 	all_software_license_ok
-	all_software_license_from_perlmodule_ok
-	all_software_license_from_meta_ok
-	all_software_license_from_metayml_ok
-	all_software_license_from_metajson_ok
 );
+#	all_software_license_from_perlmodule_ok
+#	all_software_license_from_meta_ok
+#	all_software_license_from_metayml_ok
+#	all_software_license_from_metajson_ok
+#);
 
 my $passed_a_test = FALSE;
 
 sub import {
-	my ($self, @plan) = @_;
+	my ($self, @args) = @_;
 	my $pack = caller;
 	my $test = Test::Builder->new;
 
 	$test->exported_to($pack);
-	$test->plan(@plan);
+	$test->plan(@args);
 
 	$self->export_to_level(1, $self, @Test::Software::License::EXPORT);
-	return;
+	return 1;
 }
 
 
 sub all_software_license_ok {
+	my $options = shift if ref $_[0] eq 'HASH';
+	$options ||= {strict => 1};
+
 	my $test = Test::Builder->new;
 	all_software_license_from_perlscript_ok();
 	all_software_license_from_perlmodule_ok();
-	all_software_license_from_metayml_ok();
-	all_software_license_from_metajson_ok();
-	_check_for_license_file();
-	$test->ok($passed_a_test,
-		'This distribution appears to have a valid License');
+	all_software_license_from_metayml_ok($options);
+	all_software_license_from_metajson_ok($options);
+	_check_for_license_file($options);
+	if ( not $options->{strict}) {
+		$test->ok($passed_a_test,
+			'This distribution appears to have a valid License');
+	}
 	return;
 }
 
 
-sub all_software_license_from_meta_ok {
-	my $test = Test::Builder->new;
-	all_software_license_from_metayml_ok();
-	all_software_license_from_metajson_ok();
-	$test->ok($passed_a_test,
-		'This distribution appears to have a valid License');
-	return;
-}
+#sub all_software_license_from_meta_ok {
+#	my $test = Test::Builder->new;
+#	all_software_license_from_metayml_ok();
+#	all_software_license_from_metajson_ok();
+#	$test->ok($passed_a_test,
+#		'This distribution appears to have a valid License');
+#	return;
+#}
 
 
 sub all_software_license_from_perlmodule_ok {
@@ -133,19 +139,25 @@ sub _guess_license {
 
 
 sub all_software_license_from_metayml_ok {
-	my $test = Test::Builder->new;
+	my $options = shift;
+	my $test    = Test::Builder->new;
 
 	if (-e 'META.yml') {
 		try {
 			my $meta_yml  = Parse::CPAN::Meta->load_file('META.yml');
 			my @guess_yml = _hack_guess_license_from_meta($meta_yml->{license});
-			if (@guess_yml) {
-				$test->ok(1, "META.yml -> @guess_yml");
-				$passed_a_test = TRUE;
+			if ($options->{strict}) {
+				$test->ok($guess_yml[0], "META.yml -> @guess_yml");
 			}
 			else {
-				$test->ok(0, 'META.yml -> license unknown');
-				$passed_a_test = FALSE;
+				if (@guess_yml) {
+					$test->ok(1, "META.yml -> @guess_yml");
+					$passed_a_test = TRUE;
+				}
+				else {
+					$test->ok(0, 'META.yml -> license unknown');
+					$passed_a_test = FALSE;
+				}
 			}
 		};
 	}
@@ -157,20 +169,28 @@ sub all_software_license_from_metayml_ok {
 
 
 sub all_software_license_from_metajson_ok {
-	my $test = Test::Builder->new;
+	my $options = shift;
+	my $test    = Test::Builder->new;
 
 	if (-e 'META.json') {
 		try {
 			my $meta_json = Parse::CPAN::Meta->load_file('META.json');
 			foreach my $json_license (@{$meta_json->{license}}) {
 				my @guess_json = _hack_guess_license_from_meta($json_license);
-				if (@guess_json) {
-					$test->ok(1, "META.json -> @guess_json");
-					$passed_a_test = TRUE;
+#p @guess_json;
+#p $guess_json[0];
+				if ($options->{strict}) {
+					$test->ok($guess_json[0], "META.json -> @guess_json");
 				}
 				else {
-					$test->ok(0, 'META.json -> license unknown');
-					$passed_a_test = FALSE;
+					if (@guess_json) {
+						$test->ok(1, "META.json -> @guess_json");
+						$passed_a_test = TRUE;
+					}
+					else {
+						$test->ok(0, 'META.json -> license unknown');
+						$passed_a_test = FALSE;
+					}
 				}
 			}
 		};
@@ -183,15 +203,26 @@ sub all_software_license_from_metajson_ok {
 
 
 sub _check_for_license_file {
-	my $test = Test::Builder->new;
+	my $options = shift;
+	my $test    = Test::Builder->new;
 
-	$test->ok(-e 'LICENSE', 'LICENSE file found');
+	if ($options->{strict}) {
+		$test->ok(-e 'LICENSE', 'LICENSE file found');
+	}
+	else {
+		if (-e 'LICENSE') {
+			$test->ok(1, 'LICENSE file found');
+		}
+		else {
+			$test->skip('no LICENSE file found');
+		}
+	}
 	return;
 }
 
 
 #######
-## override
+## hack to support meta license strings
 #######
 sub _hack_guess_license_from_meta {
 	my $license_str = shift;
