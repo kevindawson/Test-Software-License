@@ -6,7 +6,7 @@ use strict;
 use Carp;
 
 use version;
-our $VERSION = '0.001006';
+our $VERSION = '0.001007';
 use English qw( -no_match_vars );    # Avoids reg-ex performance penalty
 local $OUTPUT_AUTOFLUSH = 1;
 
@@ -257,7 +257,7 @@ Test::Software::License - just another xt for Software::License
 
 =head1 VERSION
 
-This document describes Test::Software::License version 0.001005
+This document describes Test::Software::License version 0.001007
 
 =head1 SYNOPSIS
 
