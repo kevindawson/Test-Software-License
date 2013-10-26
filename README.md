@@ -4,7 +4,7 @@ Test::Software::License - just another xt for Software::License
 
 # VERSION
 
-This document describes Test::Software::License version 0.001005
+This document describes Test::Software::License version 0.001007
 
 # SYNOPSIS
 

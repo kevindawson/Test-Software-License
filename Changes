@@ -1,6 +1,8 @@
 Revision history for Test-Software-License
 
 {{$NEXT}}
+
+0.001007 2013-10-26T19:10:33+0100 BST
  - Add option support for strict
  - drop dependencies for travis completion
  - pass all relevant local xt's
