@@ -13,7 +13,7 @@ BEGIN {
 }
 
 use Test::Requires {
-	'Test::Software::License' => 0.001,
+	'Test::Software::License' => 0.002,
 };
 
 all_software_license_ok();
