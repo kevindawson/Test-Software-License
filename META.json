@@ -36,13 +36,12 @@
       },
       "runtime" : {
          "requires" : {
-            "Carp" : "1.32",
             "Exporter" : "5.68",
             "File::Find::Rule" : "0.33",
             "File::Find::Rule::Perl" : "1.13",
             "File::Slurp" : "9999.19",
             "Parse::CPAN::Meta" : "1.4409",
-            "Software::LicenseUtils" : "0.103006",
+            "Software::LicenseUtils" : "0.103007",
             "Test::Builder" : "0.99",
             "Try::Tiny" : "0.18",
             "constant" : "1.27",
@@ -77,7 +76,7 @@
          "web" : "https://github.com/kevindawson/Test-Software-License"
       }
    },
-   "version" : "0.001007",
+   "version" : "0.002000",
    "x_contributors" : [
       "bowtie <bowtie@cpan.org>"
    ]

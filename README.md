@@ -4,27 +4,26 @@ Test::Software::License - just another xt for Software::License
 
 # VERSION
 
-This document describes Test::Software::License version 0.001007
+This document describes Test::Software::License version 0.002000
 
 # SYNOPSIS
 
 	use Test::More;
-	use Test::Requires {
-		'Test::Software::License' => 0.001,
-	};
+	use Test::Requires { 'Test::Software::License' => 0.002 };
 
 	all_software_license_ok();
 
-	# the following is brutal, if it exists it must have a license
+	# the following is brutal, if it exists it must have a valid license
 	# all_software_license_ok({ strict => 1 });
 
 	done_testing();
 
-For an example of a complete test file look in eg/test-software-license.t
+For an example of a complete test file look in eg/xt/software-license.t
 
 # DESCRIPTION
 
-this should be treated as beta, as initial release
+This is the initial release of Test::Software::License it is intended to be
+used as part of your xt test.
 
 
 
@@ -32,8 +31,10 @@ this should be treated as beta, as initial release
 
 - all\_software\_license\_ok
 
-    This is the main method you should use, it uses all of the other methods to
-    check your distribution for License information.
+    This is the main method you should use, it uses all of the internal methods to
+    check your distribution for License information. It checks the contents of
+    scripts/bin along with lib, it expects to find META.\[yml|json\],
+    just for good measure it checks for the presence of a LICENSE file.
 
     	all_software_license_ok();
 
@@ -41,6 +42,8 @@ this should be treated as beta, as initial release
     use the following, its brutal, good for finding CPANTS issues if that is your thing.
 
     	all_software_license_ok({ strict => 1 });
+
+    If you are trying to track down a issue you will get the best results with prove -lv
 
 - import
 
