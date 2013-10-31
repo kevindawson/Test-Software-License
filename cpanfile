@@ -1,13 +1,12 @@
 # cpanfile
 requires 'perl', '5.008004';
 
-requires 'Carp',                   '1.32';
 requires 'Exporter',               '5.68';
 requires 'File::Find::Rule',       '0.33';
 requires 'File::Find::Rule::Perl', '1.13';
 requires 'File::Slurp',            '9999.19';
 requires 'Parse::CPAN::Meta',      '1.4409';
-requires 'Software::LicenseUtils', '0.103006';
+requires 'Software::LicenseUtils', '0.103007';
 requires 'Test::Builder',          '0.99';
 requires 'Try::Tiny',              '0.18';
 requires 'constant',               '1.27';
