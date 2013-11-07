@@ -6,23 +6,20 @@ use strict;
 
 use version;
 our $VERSION = '0.002000';
-use English qw( -no_match_vars );    # Avoids reg-ex performance penalty
+use English qw( -no_match_vars );
 local $OUTPUT_AUTOFLUSH = 1;
 
-use parent 0.225 qw(Exporter);
-
-# use Data::Printer {caller_info => 1, colored => 1,};
+use parent 0.228 qw(Exporter);
 use Software::LicenseUtils 0.103007;
-
 use File::Slurp;
 use File::Find::Rule       ();
 use File::Find::Rule::Perl ();
 use Try::Tiny;
-use Parse::CPAN::Meta 1.4405;
+use Parse::CPAN::Meta 1.4409;
 
 use constant {FFR => 'File::Find::Rule', TRUE => 1, FALSE => 0, EMPTY => -1};
 
-use Test::Builder 0.98;
+use Test::Builder 1.001002;
 
 @Test::Software::License::EXPORT = qw(
 	all_software_license_ok
@@ -221,12 +218,12 @@ sub _check_for_license_file {
 
 	if ($options->{strict}) {
 		$test->ok(-e 'LICENSE', 'LICENSE file found');
+			my $license_file = read_file('LICENSE');
+			$test->like($license_file, qr/$meta_author/, 'LICENSE file contains META Author');
 	}
 	else {
 		if (-e 'LICENSE') {
 			$test->ok(1, 'LICENSE file found');
-			my $license_file = read_file('LICENSE');
-			$test->like($license_file, qr/$meta_author/, 'LICENCE file contains meta author');
 		}
 		else {
 			$test->skip('no LICENSE file found');
@@ -259,7 +256,7 @@ __END__
 
 =head1 NAME
 
-Test::Software::License - just another xt for Software::License
+Test::Software::License - just another xt, for Software::License
 
 =head1 VERSION
 
@@ -307,6 +304,8 @@ If you are trying to track down a issue you will get the best results with prove
 
 =item * import
 
+
+
 =back
 
 =head1 AUTHOR
@@ -331,6 +330,7 @@ it under the same terms as Perl itself.
 =head1 SEE ALSO
 
 L<Software::License>
+
 L<XT::Manager>
 
 =cut
