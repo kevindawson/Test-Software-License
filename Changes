@@ -1,6 +1,8 @@
 Revision history for Test-Software-License
 
 {{$NEXT}}
+
+0.002000 2013-11-07T19:49:42+0000 GMT
  - rename and relocate software-licence.t
  - remove Carp as we are not using it
  - add author name check to _check_for_license_file

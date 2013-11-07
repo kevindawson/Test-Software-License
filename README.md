@@ -1,6 +1,6 @@
 # NAME
 
-Test::Software::License - just another xt for Software::License
+Test::Software::License - just another xt, for Software::License
 
 # VERSION
 
@@ -47,6 +47,10 @@ used as part of your xt test.
 
 - import
 
+
+
+
+
 # AUTHOR
 
 Kevin Dawson <bowtie@cpan.org>
@@ -70,4 +74,5 @@ it under the same terms as Perl itself.
 # SEE ALSO
 
 [Software::License](http://search.cpan.org/perldoc?Software::License)
+
 [XT::Manager](http://search.cpan.org/perldoc?XT::Manager)
