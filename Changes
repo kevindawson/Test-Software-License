@@ -2,11 +2,12 @@ Revision history for Test-Software-License
 
 {{$NEXT}}
  - rename and relocate software-licence.t
- - remove carp as we are not using it
- - add author name check in LICENCE file
+ - remove Carp as we are not using it
+ - add author name check to _check_for_license_file
+ - refactor and rename test files
 
 0.001007 2013-10-26T19:10:33Z +0100 BST
- - Add option support for strict
+ - Add option support for strict option
  - drop dependencies for travis completion
  - pass all relevant local xt's
  - drop perl min version to support 5.8.4
