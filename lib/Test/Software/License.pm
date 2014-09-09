@@ -1,6 +1,7 @@
 package Test::Software::License;
 
-use 5.008004;
+use v5.10;
+#use 5.008004;
 use warnings;
 use strict;
 
@@ -11,11 +12,13 @@ local $OUTPUT_AUTOFLUSH = 1;
 
 use parent 0.228 qw(Exporter);
 use Software::LicenseUtils 0.103007;
-use File::Slurp;
+use File::Slurp::Tiny qw(read_file read_lines);
 use File::Find::Rule       ();
 use File::Find::Rule::Perl ();
+use List::MoreUtils qw(any);
 use Try::Tiny;
 use Parse::CPAN::Meta 1.4409;
+use Data::Printer { caller_info => 1, colored => 1, };
 
 use constant {FFR => 'File::Find::Rule', TRUE => 1, FALSE => 0, EMPTY => -1};
 
@@ -27,6 +30,7 @@ use Test::Builder 1.001002;
 
 my $passed_a_test = FALSE;
 my $meta_author = FALSE;
+my @meta_yml_url;
 
 #######
 # import
@@ -148,22 +152,55 @@ sub _from_metayml_ok {
 
 	if (-e 'META.yml') {
 		try {
-			my $meta_yml  = Parse::CPAN::Meta->load_file('META.yml');
+			my $meta_yml = Parse::CPAN::Meta->load_file('META.yml');
 			$meta_author = $meta_yml->{author}[0];
-
 			my @guess_yml = _hack_guess_license_from_meta($meta_yml->{license});
-			if ($options->{strict}) {
-				$test->ok($guess_yml[0], "META.yml -> @guess_yml");
+
+			my @guess_yml_meta_name;
+			my @guess_yml_url;
+			my $software_license_url = 'unknown';
+
+			for (0 .. $#guess_yml) {
+				push @guess_yml_meta_name, $guess_yml[$_]->meta_name;
+			}
+			if (@guess_yml) {
+				$test->ok(
+					sub {
+						any {m/$meta_yml->{license}/} @guess_yml_meta_name;
+					},
+					"META.yml -> license: $meta_yml->{license} -> @guess_yml"
+				);
+				$passed_a_test = TRUE;
 			}
 			else {
-				if (@guess_yml) {
-					$test->ok(1, "META.yml -> @guess_yml");
+				$test->ok(0, "META.yml -> license: $meta_yml->{license} -> unknown");
+				$passed_a_test = FALSE;
+			}
+
+			if ($meta_yml->{resources}->{license}) {
+				for (0 .. $#guess_yml) {
+					push @guess_yml_url, $guess_yml[$_]->url;
+					$software_license_url = $guess_yml[$_]
+						if $guess_yml[$_]->url eq $meta_yml->{resources}->{license};
+				}
+				if ($software_license_url ne 'unknown') {
+					$test->ok(
+						sub {
+							any {m/$meta_yml->{resources}->{license}/} @guess_yml_url;
+						},
+						"META.yml -> resources.license: $meta_yml->{resources}->{license} -> $software_license_url"
+					);
 					$passed_a_test = TRUE;
 				}
 				else {
-					$test->ok(0, 'META.yml -> license unknown');
+					$test->ok(0,
+						"META.yml -> resources.license: $meta_yml->{resources}->{license} -> $software_license_url"
+					);
 					$passed_a_test = FALSE;
 				}
+			}
+			else {
+				$test->skip("META.yml -> resources.license:  [optional]");
 			}
 		};
 	}
@@ -183,24 +220,58 @@ sub _from_metajson_ok {
 	if (-e 'META.json') {
 		try {
 			my $meta_json = Parse::CPAN::Meta->load_file('META.json');
+#p $meta_json;
 			$meta_author = $meta_json->{author}[0];
+#p $meta_json->{license};
+my @guess_json = _hack_guess_license_from_meta(@{$meta_json->{license}});
+#p @guess_json;
+			my @guess_json_meta_name;
+			my @guess_json_url;
+			my $software_license_url = 'unknown';
+
+			for (0 .. $#guess_json) {
+#p $guess_json[$_]->meta_name;
+				push @guess_json_meta_name, $guess_json[$_]->meta_name;
+			}
+
+#p @guess_json_meta_name;
+
 
 			foreach my $json_license (@{$meta_json->{license}}) {
 				my @guess_json = _hack_guess_license_from_meta($json_license);
-				if ($options->{strict}) {
-					$test->ok($guess_json[0], "META.json -> @guess_json");
-				}
-				else {
-					if (@guess_json) {
-						$test->ok(1, "META.json -> @guess_json");
-						$passed_a_test = TRUE;
+
+if (@guess_json) {
+
+#				if ($options->{strict}) {
+					$test->is_eq($guess_json[0]->meta2_name,
+						$json_license,
+						"META.json -> license: $json_license -> @guess_json");
+$passed_a_test = TRUE;
+
+			}
+			else {
+				$test->ok(0, "META.json -> license: $meta_json->{license} -> unknown");
+				$passed_a_test = FALSE;
+			}
+
+
+
+			}
+
+					if ($meta_json->{resources}->{license}) {
+
+						$test->ok( 
+							@meta_yml_url,
+							$meta_json->{resources}->{license},
+							"META.json -> resources.license: $meta_json->{resources}->{license} -> @meta_yml_url"
+						);
 					}
 					else {
-						$test->ok(0, 'META.json -> license unknown');
-						$passed_a_test = FALSE;
+						$test->skip("META.json -> resources.license:  [optional]");
 					}
-				}
-			}
+
+
+
 		};
 	}
 	else {
@@ -217,9 +288,35 @@ sub _check_for_license_file {
 	my $test    = Test::Builder->new;
 
 	if ($options->{strict}) {
-		$test->ok(-e 'LICENSE', 'LICENSE file found');
-			my $license_file = read_file('LICENSE');
-			$test->like($license_file, qr/$meta_author/, 'LICENSE file contains META Author');
+
+		if (-e 'LICENSE') {
+			$test->ok(1, 'LICENSE file found');
+			my $license_file;
+			my @license_file;
+			try {
+				@license_file = read_lines('LICENSE', chomp => 1);
+			};
+
+			my $meta_author_name = $meta_author;
+			$meta_author_name =~ s/\b\W*[\w0-9._%+-]+@[\w0-9.-]+\.[\w]{2,4}\W*$//;
+
+			my @copyright_holder
+				= grep(/^This software is Copyright/i, @license_file);
+
+			if (any {m/$meta_author_name/} @copyright_holder) {
+				$test->ok(1,
+					"LICENSE file Copyright Holder contains META Author name: $meta_author_name"
+				);
+			}
+			else {
+				$test->ok(0,
+					"LICENSE file Copyright Holder dose not contain META Author name: $meta_author_name"
+				);
+			}
+		}
+		else {
+			$test->ok(0, 'no LICENSE file found');
+		}
 	}
 	else {
 		if (-e 'LICENSE') {
@@ -334,4 +431,56 @@ L<Software::License>
 L<XT::Manager>
 
 =cut
+
+
+
+#######
+# _from_metajson_ok
+#######
+sub _from_metajson_ok {
+	my $options = shift;
+	my $test    = Test::Builder->new;
+
+	if (-e 'META.json') {
+		try {
+			my $meta_json = Parse::CPAN::Meta->load_file('META.json');
+			$meta_author = $meta_json->{author}[0];
+
+			foreach my $json_license (@{$meta_json->{license}}) {
+				my @guess_json = _hack_guess_license_from_meta($json_license);
+				if ($options->{strict}) {
+					$test->is_eq($guess_json[0]->meta2_name,
+						$json_license,
+						"META.json -> license: $json_license -> @guess_json");
+
+					if ($meta_json->{resources}->{license}) {
+
+						$test->ok( 
+							@meta_yml_url,
+							$meta_json->{resources}->{license},
+							"META.json -> resources.license: $meta_json->{resources}->{license} -> @meta_yml_url"
+						);
+					}
+					else {
+						$test->skip("META.json -> resources.license:  [optional]");
+					}
+				}
+				else {
+					if (@guess_json) {
+						$test->ok(1, "META.json -> @guess_json");
+						$passed_a_test = TRUE;
+					}
+					else {
+						$test->ok(0, 'META.json -> license unknown');
+						$passed_a_test = FALSE;
+					}
+				}
+			}
+		};
+	}
+	else {
+		$test->skip('no META.json found');
+	}
+	return;
+}
 
