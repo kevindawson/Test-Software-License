@@ -1,7 +1,6 @@
 package Test::Software::License;
 
-use v5.10;
-#use 5.008004;
+use 5.008004;
 use warnings;
 use strict;
 
