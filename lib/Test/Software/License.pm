@@ -6,7 +6,7 @@ use warnings;
 use strict;
 
 use version;
-our $VERSION = '0.002000';
+our $VERSION = '0.003_07';
 use English qw( -no_match_vars );
 local $OUTPUT_AUTOFLUSH = 1;
 
@@ -423,7 +423,7 @@ Test::Software::License - just another xt, for Software::License
 
 =head1 VERSION
 
-This document describes Test::Software::License version 0.002000
+This document describes Test::Software::License version 0.003_07
 
 =head1 SYNOPSIS
 
