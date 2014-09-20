@@ -11,7 +11,7 @@ use Test::More tests => 14;
 # Check dependencies that are not checked but  Test::Software::License.pm itself
 BEGIN {
 	use_ok('Test::Software::License', '0.002000');
-	use_ok('Exporter',                '5.7');
+	use_ok('Exporter',                '5.68');
 	use_ok('File::Find::Rule',        '0.33');
 	use_ok('File::Find::Rule::Perl',  '1.13');
 	use_ok('File::Slurp::Tiny',       '0.003');
@@ -23,7 +23,7 @@ BEGIN {
 	use_ok('parent',                  '0.228');
 	use_ok('version',                 '0.9904');
 
-	use_ok('Test::More',     '1.001006');
+	use_ok('Test::More',     '1.001002');
 	use_ok('Test::Requires', '0.08');
 }
 
