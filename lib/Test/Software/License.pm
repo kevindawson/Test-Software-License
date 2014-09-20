@@ -17,7 +17,6 @@ use File::Find::Rule::Perl ();
 use List::MoreUtils qw(any);
 use Try::Tiny;
 use Parse::CPAN::Meta 1.4409;
-use Data::Printer { caller_info => 1, colored => 1, };
 
 use constant {FFR => 'File::Find::Rule', TRUE => 1, FALSE => 0, EMPTY => -1};
 
