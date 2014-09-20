@@ -154,11 +154,12 @@ sub _from_metayml_ok {
 		try {
 			my $meta_yml = Parse::CPAN::Meta->load_file('META.yml');
 			$meta_author = $meta_yml->{author}[0];
-			my @guess_yml = _hack_guess_license_from_meta($meta_yml->{license});
 
+			# force v1.x metanames
+			my @guess_yml = Software::LicenseUtils->guess_license_from_meta_key($meta_yml->{license},1);
 			my @guess_yml_meta_name;
 			my @guess_yml_url;
-			my $software_license_url = 'unknown';
+#			my $software_license_url = 'unknown';
 
 			for (0 .. $#guess_yml) {
 				push @guess_yml_meta_name, $guess_yml[$_]->meta_name;
@@ -180,21 +181,23 @@ sub _from_metayml_ok {
 			if ($meta_yml->{resources}->{license}) {
 				for (0 .. $#guess_yml) {
 					push @guess_yml_url, $guess_yml[$_]->url;
-					$software_license_url = $guess_yml[$_]
-						if $guess_yml[$_]->url eq $meta_yml->{resources}->{license};
+#					$software_license_url = $guess_yml[$_]
+#						if $guess_yml[$_]->url eq $meta_yml->{resources}->{license};
 				}
-				if ($software_license_url ne 'unknown') {
-					$test->ok(
-						sub {
-							any {m/$meta_yml->{resources}->{license}/} @guess_yml_url;
-						},
-						"META.yml -> resources.license: $meta_yml->{resources}->{license} -> $software_license_url"
+
+				# check for a valid license, sl-url
+				if (_hack_check_license_url($meta_yml->{resources}->{license}) ne
+					FALSE)
+				{
+
+					$test->ok(1,
+						"META.yml -> resources.license: $meta_yml->{resources}->{license} -> " . _hack_check_license_url($meta_yml->{resources}->{license})
 					);
 					$passed_a_test = TRUE;
 				}
 				else {
 					$test->ok(0,
-						"META.yml -> resources.license: $meta_yml->{resources}->{license} -> $software_license_url"
+						"META.yml -> resources.license: $meta_yml->{resources}->{license} -> unknown"
 					);
 					$passed_a_test = FALSE;
 				}
@@ -220,58 +223,72 @@ sub _from_metajson_ok {
 	if (-e 'META.json') {
 		try {
 			my $meta_json = Parse::CPAN::Meta->load_file('META.json');
-#p $meta_json;
 			$meta_author = $meta_json->{author}[0];
-#p $meta_json->{license};
-my @guess_json = _hack_guess_license_from_meta(@{$meta_json->{license}});
-#p @guess_json;
+			my @guess_json
+				= _hack_guess_license_from_meta(@{$meta_json->{license}});
 			my @guess_json_meta_name;
 			my @guess_json_url;
-			my $software_license_url = 'unknown';
 
 			for (0 .. $#guess_json) {
-#p $guess_json[$_]->meta_name;
 				push @guess_json_meta_name, $guess_json[$_]->meta_name;
 			}
 
-#p @guess_json_meta_name;
-
-
 			foreach my $json_license (@{$meta_json->{license}}) {
-				my @guess_json = _hack_guess_license_from_meta($json_license);
 
-if (@guess_json) {
+				# force v2 metanames
+				my @guess_json
+					= Software::LicenseUtils->guess_license_from_meta_key($json_license,
+					2);
 
-#				if ($options->{strict}) {
+				if (@guess_json) {
 					$test->is_eq($guess_json[0]->meta2_name,
 						$json_license,
 						"META.json -> license: $json_license -> @guess_json");
-$passed_a_test = TRUE;
-
-			}
-			else {
-				$test->ok(0, "META.json -> license: $meta_json->{license} -> unknown");
-				$passed_a_test = FALSE;
-			}
-
-
-
+					$passed_a_test = TRUE;
+				}
+				else {
+					$test->ok(0, "META.json -> license: $json_license -> unknown");
+					$passed_a_test = FALSE;
+				}
 			}
 
-					if ($meta_json->{resources}->{license}) {
+			if ($meta_json->{resources}->{license}) {
 
-						$test->ok( 
-							@meta_yml_url,
-							$meta_json->{resources}->{license},
-							"META.json -> resources.license: $meta_json->{resources}->{license} -> @meta_yml_url"
+				# find url from $meta_json->{license}
+				for (0 .. $#guess_json) {
+					push @guess_json_url, $guess_json[$_]->url;
+				}
+
+				# check for a valid license, sl-url
+				if (_hack_check_license_url($meta_json->{resources}->{license}) ne
+					FALSE)
+				{
+					if (any {m/$meta_json->{resources}->{license}/} @guess_json_url) {
+						$test->ok(1,
+							"META.json -> resources.license: $meta_json->{resources}->{license} -> "
+								. _hack_check_license_url($meta_json->{resources}->{license})
 						);
+						$passed_a_test = TRUE;
 					}
 					else {
-						$test->skip("META.json -> resources.license:  [optional]");
+						$test->ok(0,
+							"META.json -> resources.license: $meta_json->{resources}->{license} -> license miss match"
+						);
+						$passed_a_test = FALSE;
 					}
-
-
-
+				}
+				else {
+					$test->ok(0,
+						"META.json -> resources.license: $meta_json->{resources}->{license} -> unknown"
+					);
+					$passed_a_test = FALSE;
+				}
+			}
+			else {
+				{
+					$test->skip("META.json -> resources.license:  [optional]");
+				}
+			}
 		};
 	}
 	else {
@@ -287,7 +304,7 @@ sub _check_for_license_file {
 	my $options = shift;
 	my $test    = Test::Builder->new;
 
-	if ($options->{strict}) {
+	if ( $options->{strict}) {
 
 		if (-e 'LICENSE') {
 			$test->ok(1, 'LICENSE file found');
@@ -340,6 +357,55 @@ sub _hack_guess_license_from_meta {
 		@guess = Software::LicenseUtils->guess_license_from_meta($hack);
 	};
 	return @guess;
+}
+
+#######
+## hack to support meta license urls
+#######
+sub _hack_check_license_url {
+	my $license_url = shift;
+
+	my @cpan_meta_spec_licence_name = qw(
+		agpl_3
+		apache_1_1
+		apache_2_0
+		artistic_1
+		artistic_2
+		bsd
+		freebsd
+		gfdl_1_2
+		gfdl_1_3
+		gpl_1
+		gpl_2
+		gpl_3
+		lgpl_2_1
+		lgpl_3_0
+		mit
+		mozilla_1_0
+		mozilla_1_1
+		openssl
+		perl_5
+		qpl_1_0
+		ssleay
+		sun
+		zlib
+	);
+
+	foreach my $license_name (@cpan_meta_spec_licence_name) {
+
+		my @guess = _hack_guess_license_from_meta($license_name);
+		if (@guess) {
+			for (0 .. $#guess) {
+				push my @sl_urls, $guess[$_]->url;
+				if (any {m/$license_url/} @sl_urls) {
+					return $guess[$_];
+				}
+			}
+		}
+	}
+
+	return FALSE;
+
 }
 
 
