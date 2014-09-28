@@ -27,7 +27,7 @@ use Test::Builder 1.001002;
 );
 
 my $passed_a_test = FALSE;
-my $meta_author = FALSE;
+my $meta_author   = FALSE;
 my @meta_yml_url;
 
 #######
@@ -154,9 +154,11 @@ sub _from_metayml_ok {
 			$meta_author = $meta_yml->{author}[0];
 
 			# force v1.x metanames
-			my @guess_yml = Software::LicenseUtils->guess_license_from_meta_key($meta_yml->{license},1);
+			my @guess_yml = Software::LicenseUtils->guess_license_from_meta_key(
+				$meta_yml->{license}, 1);
 			my @guess_yml_meta_name;
 			my @guess_yml_url;
+
 #			my $software_license_url = 'unknown';
 
 			for (0 .. $#guess_yml) {
@@ -179,19 +181,27 @@ sub _from_metayml_ok {
 			if ($meta_yml->{resources}->{license}) {
 				for (0 .. $#guess_yml) {
 					push @guess_yml_url, $guess_yml[$_]->url;
-#					$software_license_url = $guess_yml[$_]
-#						if $guess_yml[$_]->url eq $meta_yml->{resources}->{license};
+
 				}
 
 				# check for a valid license, sl-url
-				if (_hack_check_license_url($meta_yml->{resources}->{license}) ne
-					FALSE)
+				if (
+					_hack_check_license_url($meta_yml->{resources}->{license}) ne FALSE)
 				{
+					if ( any {/$meta_yml->{resources}->{license}/} @guess_yml_url )
+					{
+						$test->ok(1,
+							"META.yml -> resources.license: $meta_yml->{resources}->{license} -> "
+								. _hack_check_license_url($meta_yml->{resources}->{license}));
+						$passed_a_test = TRUE;
+					}
+					else {
+						$test->ok(0,
+							"META.yml -> resources.license: $meta_yml->{resources}->{license} -> license miss match"
+						);
+						$passed_a_test = FALSE;
 
-					$test->ok(1,
-						"META.yml -> resources.license: $meta_yml->{resources}->{license} -> " . _hack_check_license_url($meta_yml->{resources}->{license})
-					);
-					$passed_a_test = TRUE;
+					}
 				}
 				else {
 					$test->ok(0,
@@ -261,7 +271,8 @@ sub _from_metajson_ok {
 				if (_hack_check_license_url($meta_json->{resources}->{license}) ne
 					FALSE)
 				{
-					if (any {m/$meta_json->{resources}->{license}/} @guess_json_url) {
+					if (any {/$meta_json->{resources}->{license}/} @guess_json_url) {
+
 						$test->ok(1,
 							"META.json -> resources.license: $meta_json->{resources}->{license} -> "
 								. _hack_check_license_url($meta_json->{resources}->{license})
@@ -302,7 +313,7 @@ sub _check_for_license_file {
 	my $options = shift;
 	my $test    = Test::Builder->new;
 
-	if ( $options->{strict}) {
+	if ($options->{strict}) {
 
 		if (-e 'LICENSE') {
 			$test->ok(1, 'LICENSE file found');
