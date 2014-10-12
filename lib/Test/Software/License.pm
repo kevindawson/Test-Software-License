@@ -14,7 +14,7 @@ use Software::LicenseUtils 0.103007;
 use File::Slurp::Tiny qw(read_file read_lines);
 use File::Find::Rule       ();
 use File::Find::Rule::Perl ();
-use List::MoreUtils qw(any);
+use List::AllUtils qw(any);
 use Try::Tiny;
 use Parse::CPAN::Meta 1.4409;
 
@@ -507,4 +507,44 @@ L<XT::Manager>
 
 =cut
 
+
+package Test::Software::License;
+
+use 5.008004;
+use warnings;
+use strict;
+
+use version;
+our $VERSION = '0.003_07';
+use English qw( -no_match_vars );
+local $OUTPUT_AUTOFLUSH = 1;
+
+use parent 0.228 qw(Exporter);
+use Software::LicenseUtils 0.103007;
+use File::Slurp::Tiny qw(read_file read_lines);
+use File::Find::Rule       ();
+use File::Find::Rule::Perl ();
+use List::MoreUtils qw(any);
+use Try::Tiny;
+use Parse::CPAN::Meta 1.4409;
+
+use constant {FFR => 'File::Find::Rule', TRUE => 1, FALSE => 0, EMPTY => -1};
+
+use Test::Builder 1.001002;
+
+@Test::Software::License::EXPORT = qw(
+	all_software_license_ok
+);
+
+my $passed_a_test = FALSE;
+my $meta_author = FALSE;
+my @meta_yml_url;
+
+#######
+# import
+#######
+sub import {
+	my ($self, @args) = @_;
+	my $pack = caller;
+	my $test = Test::Builder->new;
 

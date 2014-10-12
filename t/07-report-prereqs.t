@@ -9,9 +9,10 @@ local $OUTPUT_AUTOFLUSH = 1;
 
 use Test::Requires {'ExtUtils::MakeMaker'   => 6.66};
 use Test::Requires {'File::Spec::Functions' => 3.40};
-use Test::Requires {'List::Util'            => 1.27};
+use Test::Requires {'List::AllUtils'        => 0.09};
 
-use List::Util qw/max/;
+#use List::Util qw/max/;
+use List::AllUtils qw(max);
 
 my @modules = qw(
 );

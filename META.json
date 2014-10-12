@@ -41,6 +41,7 @@
             "File::Find::Rule" : "0.33",
             "File::Find::Rule::Perl" : "1.13",
             "File::Slurp::Tiny" : "0.003",
+            "List::AllUtils" : "0.09",
             "Parse::CPAN::Meta" : "1.4414",
             "Software::LicenseUtils" : "0.10301",
             "Test::Builder" : "1.001006",
@@ -58,10 +59,9 @@
          },
          "suggests" : {
             "ExtUtils::MakeMaker" : "6.82",
-            "File::Spec::Functions" : "3.4",
-            "List::Util" : "1.35",
+            "File::Spec::Functions" : "3.47",
             "Test::Pod" : "1.48",
-            "Test::Pod::Coverage" : "1.08"
+            "Test::Pod::Coverage" : "1.1"
          }
       }
    },
