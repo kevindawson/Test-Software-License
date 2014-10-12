@@ -55,7 +55,7 @@ none at present
 
 # COPYRIGHT
 
-Copyright © 2013 the Test::Software::License
+Copyright © 2013-2014 the Test::Software::License
 ["AUTHOR"](#author) and ["CONTRIBUTORS"](#contributors) as listed above.
 
 # LICENSE

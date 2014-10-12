@@ -5,7 +5,7 @@ use warnings;
 use strict;
 
 use version;
-our $VERSION = '0.003_07';
+our $VERSION = '0.004000';
 use English qw( -no_match_vars );
 local $OUTPUT_AUTOFLUSH = 1;
 
@@ -432,12 +432,12 @@ Test::Software::License - just another xt, for Software::License
 
 =head1 VERSION
 
-This document describes Test::Software::License version 0.003_07
+This document describes Test::Software::License version 0.004000
 
 =head1 SYNOPSIS
 
 	use Test::More;
-	use Test::Requires { 'Test::Software::License' => 0.002 };
+	use Test::Requires { 'Test::Software::License' => 0.004000 };
 
 	all_software_license_ok();
 
@@ -450,8 +450,10 @@ For an example of a complete test file look in eg/xt/software-license.t
 
 =head1 DESCRIPTION
 
-This is the initial release of Test::Software::License it is intended to be
-used as part of your xt test.
+Test::Software::License it is intended to be used as part of your xt tests.
+
+It now checks the META license and resources.license against
+Software::License, checking that the two correlate.
 
 
 =head1 METHODS
@@ -490,7 +492,7 @@ none at present
 
 =head1 COPYRIGHT
 
-Copyright E<copy> 2013 the Test::Software::License
+Copyright E<copy> 2013-2014 the Test::Software::License
 L</AUTHOR> and L</CONTRIBUTORS> as listed above.
 
 
@@ -507,44 +509,4 @@ L<XT::Manager>
 
 =cut
 
-
-package Test::Software::License;
-
-use 5.008004;
-use warnings;
-use strict;
-
-use version;
-our $VERSION = '0.003_07';
-use English qw( -no_match_vars );
-local $OUTPUT_AUTOFLUSH = 1;
-
-use parent 0.228 qw(Exporter);
-use Software::LicenseUtils 0.103007;
-use File::Slurp::Tiny qw(read_file read_lines);
-use File::Find::Rule       ();
-use File::Find::Rule::Perl ();
-use List::MoreUtils qw(any);
-use Try::Tiny;
-use Parse::CPAN::Meta 1.4409;
-
-use constant {FFR => 'File::Find::Rule', TRUE => 1, FALSE => 0, EMPTY => -1};
-
-use Test::Builder 1.001002;
-
-@Test::Software::License::EXPORT = qw(
-	all_software_license_ok
-);
-
-my $passed_a_test = FALSE;
-my $meta_author = FALSE;
-my @meta_yml_url;
-
-#######
-# import
-#######
-sub import {
-	my ($self, @args) = @_;
-	my $pack = caller;
-	my $test = Test::Builder->new;
 

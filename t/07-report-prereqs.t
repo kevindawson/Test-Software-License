@@ -8,7 +8,7 @@ use English qw( -no_match_vars );    # Avoids regex performance penalty
 local $OUTPUT_AUTOFLUSH = 1;
 
 use Test::Requires {'ExtUtils::MakeMaker'   => 6.66};
-use Test::Requires {'File::Spec::Functions' => 3.40};
+use Test::Requires {'File::Spec::Functions' => 3.47};
 use Test::Requires {'List::AllUtils'        => 0.09};
 
 use List::AllUtils qw(max);

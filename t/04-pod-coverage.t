@@ -11,7 +11,7 @@ BEGIN {
 	}
 }
 
-use Test::Requires { 'Test::Pod::Coverage' => 1.08 };
+use Test::Requires { 'Test::Pod::Coverage' => 1.1 };
 
 pod_coverage_ok('Test::Software::License');
 
