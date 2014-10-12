@@ -4,12 +4,12 @@ Test::Software::License - just another xt, for Software::License
 
 # VERSION
 
-This document describes Test::Software::License version 0.003\_07
+This document describes Test::Software::License version 0.004000
 
 # SYNOPSIS
 
         use Test::More;
-        use Test::Requires { 'Test::Software::License' => 0.002 };
+        use Test::Requires { 'Test::Software::License' => 0.004000 };
 
         all_software_license_ok();
 
@@ -22,8 +22,10 @@ For an example of a complete test file look in eg/xt/software-license.t
 
 # DESCRIPTION
 
-This is the initial release of Test::Software::License it is intended to be
-used as part of your xt test.
+Test::Software::License it is intended to be used as part of your xt tests.
+
+It now checks the META license and resources.license against
+Software::License, checking that the two correlate.
 
 # METHODS
 
