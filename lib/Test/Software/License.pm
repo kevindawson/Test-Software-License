@@ -27,7 +27,7 @@ use Test::Builder 1.001002;
 );
 
 my $passed_a_test = FALSE;
-my $meta_author   = FALSE;
+my $meta_author = FALSE;
 my @meta_yml_url;
 
 #######
@@ -154,10 +154,10 @@ sub _from_metayml_ok {
 			$meta_author = $meta_yml->{author}[0];
 
 			# force v1.x metanames
-			my @guess_yml = Software::LicenseUtils->guess_license_from_meta_key(
-				$meta_yml->{license}, 1);
+			my @guess_yml = Software::LicenseUtils->guess_license_from_meta_key($meta_yml->{license},1);
 			my @guess_yml_meta_name;
 			my @guess_yml_url;
+#			my @guess_yml_url;
 
 #			my $software_license_url = 'unknown';
 
@@ -548,14 +548,3 @@ sub _from_metajson_ok {
 					else {
 						$test->ok(0, 'META.json -> license unknown');
 						$passed_a_test = FALSE;
-					}
-				}
-			}
-		};
-	}
-	else {
-		$test->skip('no META.json found');
-	}
-	return;
-}
-
